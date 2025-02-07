@@ -8,6 +8,7 @@
 #define GAME_H
 
 #include "player/Player.hpp"
+#include "world/World.hpp"
 
 // std
 #include <chrono>
@@ -34,6 +35,8 @@ private:
     Camera2D _camera;
 
     Player _player;
+
+    World _world;
 };
 
 #endif  // GAME_H
