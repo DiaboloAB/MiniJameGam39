@@ -7,6 +7,8 @@
 #ifndef CHUNK_H
 #define CHUNK_H
 
+#include "raylib.h"
+
 // std
 #include <iostream>
 #include <vector>
@@ -18,6 +20,8 @@ public:
     Chunk();
     ~Chunk();
 
+    static const size_t TILE_SIZE = 128;
+
     static const size_t SIZE = 32;
     TileType tiles[SIZE][SIZE];
 
@@ -25,6 +29,8 @@ public:
     void setTile(int x, int y, TileType type);
 
     void generate();
+
+    void draw(Vector2 position);
 
 private:
 };

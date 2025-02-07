@@ -18,6 +18,7 @@ Game::Game(int screenWidth, int screenHeight)
     _lastTime = std::chrono::high_resolution_clock::now();
 
     _player = Player();
+    _world = World();
     initCamera();
 }
 
@@ -54,27 +55,27 @@ void Game::update(float deltaTime) {
 }
 
 void drawGrid(int screenWidth, int screenHeight, Camera2D camera) {
-    const int gridSpacing = 20;
+    const int gridSpacing = 32;
     const Color gridColor = LIGHTGRAY;
 
     Vector2 cameraTarget = camera.target;
 
-    for (int x = camera.target.x - (int)camera.target.x % gridSpacing -
-                 screenWidth / 2;
+    for (float x = camera.target.x - (int)camera.target.x % gridSpacing -
+                   screenWidth / 2;
          x < camera.target.x + screenWidth / 2; x += gridSpacing) {
         DrawLine(x, camera.target.y - screenHeight / 2, x,
                  camera.target.y + screenHeight / 2, gridColor);
     }
 
-    for (int y = camera.target.y - (int)camera.target.y % gridSpacing -
-                 screenHeight / 2;
+    for (float y = camera.target.y - (int)camera.target.y % gridSpacing -
+                   screenHeight / 2;
          y < camera.target.y + screenHeight / 2; y += gridSpacing) {
-        DrawLine(camera.target.x - screenWidth / 2, y,
-                 camera.target.x + screenWidth / 2, y, gridColor);
+        DrawLine(camera.target.x - screenWidth / 2, y - 5,
+                 camera.target.x + screenWidth / 2, y - 5, gridColor);
     }
 
-    float horizontalOffset = 600;
-    float verticalOffset = 275;
+    float horizontalOffset = 500;
+    float verticalOffset = 225;
 
     DrawLine(cameraTarget.x - horizontalOffset, cameraTarget.y - verticalOffset,
              cameraTarget.x + horizontalOffset, cameraTarget.y - verticalOffset,
@@ -95,6 +96,7 @@ void Game::draw() {
     ClearBackground(RAYWHITE);
     BeginMode2D(_camera);
 
+    _world.drawChunk({0, 0});
     drawGrid(_screenWidth, _screenHeight, _camera);
     _player.draw();
 

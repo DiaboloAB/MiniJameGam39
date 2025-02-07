@@ -29,14 +29,30 @@ void Chunk::setTile(int x, int y, TileType type) {
 
 void Chunk::generate() {
     for (int i = 0; i < SIZE; i++) {
+        tiles[i][SIZE / 2] = TileType::ROAD;  // Horizontal road
+        tiles[SIZE / 2][i] = TileType::ROAD;  // Vertical road
+    }
+}
+
+void Chunk::draw(Vector2 position) {
+    for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
-            int random = rand() % 100;
-            if (random < 10)
-                tiles[i][j] = TileType::ROAD;
-            else if (random < 20)
-                tiles[i][j] = TileType::BUILDING;
-            else
-                tiles[i][j] = TileType::EMPTY;
+            Vector2 tilePosition = {position.x + i * TILE_SIZE,
+                                    position.y + j * TILE_SIZE};
+            switch (tiles[i][j]) {
+                case TileType::EMPTY:
+                    DrawRectangle(tilePosition.x, tilePosition.y, TILE_SIZE,
+                                  TILE_SIZE, WHITE);
+                    break;
+                case TileType::ROAD:
+                    DrawRectangle(tilePosition.x, tilePosition.y, TILE_SIZE,
+                                  TILE_SIZE, RED);
+                    break;
+                case TileType::BUILDING:
+                    DrawRectangle(tilePosition.x, tilePosition.y, TILE_SIZE,
+                                  TILE_SIZE, BROWN);
+                    break;
+            }
         }
     }
 }

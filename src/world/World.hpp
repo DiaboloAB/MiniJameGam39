@@ -16,12 +16,19 @@
 
 namespace std {
 template <>
-struct hash<Vector2> {
-    std::size_t operator()(const Vector2& v) const noexcept {
-        return std::hash<int>()(v.x) ^ (std::hash<int>()(v.y) << 1);
+struct hash<std::pair<int, int>> {
+    std::size_t operator()(const std::pair<int, int>& p) const noexcept {
+        return std::hash<int>()(p.first) ^ (std::hash<int>()(p.second) << 1);
     }
 };
 }  // namespace std
+
+struct PairEqual {
+    bool operator()(const std::pair<int, int>& lhs,
+                    const std::pair<int, int>& rhs) const {
+        return lhs.first == rhs.first && lhs.second == rhs.second;
+    }
+};
 
 class World {
 public:
@@ -31,7 +38,9 @@ public:
     void drawChunk(Vector2 position);
 
 private:
-    std::unordered_map<Vector2, Chunk> _chunks;
+    std::unordered_map<std::pair<int, int>, Chunk,
+                       std::hash<std::pair<int, int>>, PairEqual>
+        _chunks;
 };
 
 #endif  // WORLD_H
