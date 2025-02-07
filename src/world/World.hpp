@@ -9,6 +9,7 @@
 
 #include "Chunk.hpp"
 #include "raylib.h"
+#include "tinyxml2.h"
 
 // std
 #include <unordered_map>
@@ -38,7 +39,10 @@ public:
     void drawChunk(Vector2 position);
 
 private:
-    Texture2D _tileset;
+    // Image _tileset = Image();
+
+    // // xml tilemap
+    // tinyxml2::XMLDocument _doc = tinyxml2::XMLDocument();
 
     std::unordered_map<std::pair<int, int>, Chunk,
                        std::hash<std::pair<int, int>>, PairEqual>
