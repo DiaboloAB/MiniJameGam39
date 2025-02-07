@@ -8,18 +8,43 @@
 
 Player::Player() {
     _position = {0, 0};
-    // Constructor implementation
+    Texture2D texture = LoadTexture("assets/player.png");
+    if (texture.id == 0) {
+        throw std::runtime_error("Failed to load player texture");
+    }
+    _animation = new Animation(texture, texture.width / 4, texture.height / 3, 0.1f);
+    _direction = 0;
 }
 
 Player::~Player() {
-    // Destructor implementation
+    delete _animation;
 }
 
 void Player::move(Vector2 direction) {
+    _isMoving = (direction.x != 0 || direction.y != 0);
+
     _position.x += direction.x;
     _position.y += direction.y;
+
+    if (direction.x > 0) {
+        _direction = 3; // Right
+    } else if (direction.x < 0) {
+        _direction = 0; // Left
+    } else if (direction.y > 0) {
+        _direction = 1; // Down
+    } else if (direction.y < 0) {
+        _direction = 2; // Up
+    }
+}
+
+void Player::update(float deltaTime) {
+    if (_isMoving) {
+        _animation->update(deltaTime, 3);
+    } else {
+        _animation->update(deltaTime, 1);
+    }
 }
 
 void Player::draw() {
-    DrawRectangle(_position.x - 25, _position.y - 25, 50, 50, RED);
+    _animation->draw(_position, _direction, 2.0f);
 }
