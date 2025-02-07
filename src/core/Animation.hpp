@@ -12,18 +12,17 @@
 
  class Animation {
     public:
-        Animation(Texture2D texture, int frameWidth, int frameHeight, float frameTime, float speed);
+        Animation(Texture2D texture, int frameWidth, int frameHeight, float frameTime);
         ~Animation();
     
-        void update(float deltaTime);
-        void draw(Vector2 position, float rotation = 0.0f);
+        void update(float deltaTime, int frames);
+        void draw(Vector2 position, int direction, float scale);
 
     private:
         Texture2D _texture;
         int _frameWidth;
         int _frameHeight;
         float _frameTime;
-        float _speed;
         float _elapsedTime;
         int _currentFrame;
  };

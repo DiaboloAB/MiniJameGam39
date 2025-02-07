@@ -10,6 +10,7 @@
 // std
 #include "raylib.h"
 #include <iostream>
+#include "../core/Animation.hpp"
 
 class Player {
 public:
@@ -25,13 +26,8 @@ public:
 
 private:
     Vector2 _position;
-    Texture2D _texture;
-    int _frameHeight;
-    int _frameWidth;
-    float _frameTime;
-    float _timer;
-    int _currentFrame;
-    int _direction; // 0: down, 1: left, 2: right, 3: up
+    Animation* _animation;
+    int _direction; // 0: Left, 1: Down, 2: Up, 3: Right
 };
 
 #endif  // PLAYER_H
