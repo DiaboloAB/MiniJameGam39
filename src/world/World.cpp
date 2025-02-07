@@ -16,7 +16,11 @@ World::World() {
             _chunks[chunkCoords].generate();
         }
     }
-    // Constructor implementation
+
+    // _tileset = LoadImage("assets/tileset.png");
+    // ImageResize(&_tileset, 32 * 128, 32 * 128);
+
+    // _doc.LoadFile("assets/tilemap/tilemap.tmx");
 }
 
 World::~World() {

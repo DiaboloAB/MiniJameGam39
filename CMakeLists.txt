@@ -9,6 +9,8 @@ set(BUILD_SHARED_LIBS OFF)
 
 add_subdirectory(libs/raylib)
 
+add_subdirectory(libs/tinyxml2)
+
 include_directories(libs/entt/single_include)
 
 include_directories(libs/json/single_include)
@@ -19,4 +21,4 @@ file(GLOB_RECURSE SRC_FILES src/*.cpp)
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
+target_link_libraries(${PROJECT_NAME} PRIVATE raylib tinyxml2)
