@@ -8,18 +8,44 @@
 
 Player::Player() {
     _position = {0, 0};
-    // Constructor implementation
+    _texture = LoadTexture("assets/player.png");
+    _frameHeight = _texture.height / 4;
+    _frameWidth = _texture.width / 4;
+    _currentFrame = 0;
+    _frameTime = 0.1f;
+    _timer = 0.0f;
+    _direction = 0;
 }
 
 Player::~Player() {
-    // Destructor implementation
+    UnloadTexture(_texture);
 }
 
 void Player::move(Vector2 direction) {
     _position.x += direction.x;
     _position.y += direction.y;
+
+    if (direction.x > 0) {
+        _direction = 2;
+    } else if (direction.x < 0) {
+        _direction = 1;
+    } else if (direction.y > 0) {
+        _direction = 0;
+    } else if (direction.y < 0) {
+        _direction = 3;
+    }
+}
+
+void Player::update(float deltaTime) {
+    _timer += deltaTime;
+    if (_timer >= _frameTime) {
+        _currentFrame = (_currentFrame + 1) % 4;
+        _timer = 0.0f;
+    }
 }
 
 void Player::draw() {
-    DrawRectangle(_position.x - 25, _position.y - 25, 50, 50, RED);
+    Rectangle source = {_currentFrame * _frameWidth, _direction * _frameHeight, _frameWidth, _frameHeight};
+    Rectangle dest = {_position.x, _position.y, _frameWidth, _frameHeight};
+    DrawTexturePro(_texture, source, dest, {0, 0}, 0.0f, WHITE);
 }

@@ -19,11 +19,18 @@ public:
     Vector2 getPosition() {
         return _position;
     }
-
+    void update(float deltaTime);
     void draw();
 
 private:
     Vector2 _position;
+    Texture2D _texture;
+    int _frameHeight;
+    int _frameWidth;
+    float _frameTime;
+    float _timer;
+    int _currentFrame;
+    int _direction; // 0: down, 1: left, 2: right, 3: up
 };
 
 #endif  // PLAYER_H

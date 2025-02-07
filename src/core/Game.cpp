@@ -48,6 +48,7 @@ void Game::update(float deltaTime) {
     direction = Vector2Scale(normalizedDirection, speed);
 
     _player.move(direction);
+    _player.update(deltaTime);
     followPlayer();
 
     (void)deltaTime;
