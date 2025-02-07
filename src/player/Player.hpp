@@ -28,6 +28,7 @@ private:
     Vector2 _position;
     Animation* _animation;
     int _direction; // 0: Left, 1: Down, 2: Up, 3: Right
+    bool _isMoving;
 };
 
 #endif  // PLAYER_H

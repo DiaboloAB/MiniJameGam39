@@ -21,6 +21,8 @@ Player::~Player() {
 }
 
 void Player::move(Vector2 direction) {
+    _isMoving = (direction.x != 0 || direction.y != 0);
+
     _position.x += direction.x;
     _position.y += direction.y;
 
@@ -36,9 +38,13 @@ void Player::move(Vector2 direction) {
 }
 
 void Player::update(float deltaTime) {
-    _animation->update(deltaTime, 3);
+    if (_isMoving) {
+        _animation->update(deltaTime, 3);
+    } else {
+        _animation->update(deltaTime, 1);
+    }
 }
 
 void Player::draw() {
-    _animation->draw(_position, _direction, 1.0f);
+    _animation->draw(_position, _direction, 2.0f);
 }
