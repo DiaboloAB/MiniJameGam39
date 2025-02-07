@@ -13,11 +13,11 @@ Game::Game(int screenWidth, int screenHeight)
     InitWindow(screenWidth, screenHeight,
                "raylib [core] example - basic window");
     SetTargetFPS(60);
-    SetTraceLogLevel(LOG_NONE);
+    // SetTraceLogLevel(LOG_NONE);
 
     _lastTime = std::chrono::high_resolution_clock::now();
 
-    _player = Player();
+    _player = new Player();
     _world = World();
     initCamera();
 }
@@ -48,8 +48,8 @@ void Game::update(float deltaTime) {
     Vector2 normalizedDirection = Vector2Normalize(direction);
     direction = Vector2Scale(normalizedDirection, speed);
 
-    _player.move(direction);
-    _player.update(deltaTime);
+    _player->move(direction);
+    _player->update(deltaTime);
     followPlayer();
 
     (void)deltaTime;
@@ -99,7 +99,7 @@ void Game::draw() {
 
     _world.drawChunk({0, 0});
     drawGrid(_screenWidth, _screenHeight, _camera);
-    _player.draw();
+    _player->draw();
 
     EndMode2D();
     EndDrawing();

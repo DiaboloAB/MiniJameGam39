@@ -24,7 +24,7 @@ void Game::followPlayer() {
     float verticalOffset = 225;
 
     Vector2 playerScreenPos =
-        GetWorldToScreen2D(_player.getPosition(), _camera);
+        GetWorldToScreen2D(_player->getPosition(), _camera);
     Vector2 cameraCenter = {(float)_screenWidth / 2, (float)_screenHeight / 2};
 
     Vector2 distance = Vector2Subtract(playerScreenPos, cameraCenter);

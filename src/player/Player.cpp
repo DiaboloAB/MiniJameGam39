@@ -9,6 +9,9 @@
 Player::Player() {
     _position = {0, 0};
     _texture = LoadTexture("assets/player.png");
+    if (_texture.id == 0) {
+        throw std::runtime_error("Failed to load player texture");
+    }
     _frameHeight = _texture.height / 4;
     _frameWidth = _texture.width / 4;
     _currentFrame = 0;
@@ -45,7 +48,19 @@ void Player::update(float deltaTime) {
 }
 
 void Player::draw() {
-    Rectangle source = {_currentFrame * _frameWidth, _direction * _frameHeight, _frameWidth, _frameHeight};
-    Rectangle dest = {_position.x, _position.y, _frameWidth, _frameHeight};
+
+    Rectangle source = {
+        static_cast<float>(_currentFrame * _frameWidth),
+        static_cast<float>(_direction * _frameHeight),
+        static_cast<float>(_frameWidth),
+        static_cast<float>(_frameHeight)
+    };
+
+    Rectangle dest = {
+        _position.x,
+        _position.y,
+        static_cast<float>(_frameWidth),
+        static_cast<float>(_frameHeight)
+    };
     DrawTexturePro(_texture, source, dest, {0, 0}, 0.0f, WHITE);
 }

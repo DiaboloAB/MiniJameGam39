@@ -34,7 +34,7 @@ private:
 
     Camera2D _camera;
 
-    Player _player;
+    Player* _player;
 
     World _world;
 };
