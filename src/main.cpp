@@ -8,7 +8,7 @@
 #include "raylib.h"
 
 int main() {
-    Game game = Game(450, 800);
+    Game game = Game(1920, 1080);
 
     game.run();
     // load image

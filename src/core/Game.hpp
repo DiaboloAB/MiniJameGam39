@@ -22,6 +22,9 @@ public:
 private:
     float _deltaTime;
     std::chrono::high_resolution_clock::time_point _lastTime;
+
+    int _screenWidth;
+    int _screenHeight;
 };
 
 #endif  // GAME_H
