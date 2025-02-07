@@ -6,6 +6,7 @@
 
 #include "Game.hpp"
 #include "raylib.h"
+#include "raymath.h"
 
 Game::Game(int screenWidth, int screenHeight)
     : _screenWidth(screenWidth), _screenHeight(screenHeight) {
@@ -13,6 +14,11 @@ Game::Game(int screenWidth, int screenHeight)
                "raylib [core] example - basic window");
     SetTargetFPS(60);
     SetTraceLogLevel(LOG_NONE);
+
+    _lastTime = std::chrono::high_resolution_clock::now();
+
+    _player = Player();
+    initCamera();
 }
 
 Game::~Game() {
@@ -32,27 +38,66 @@ void Game::run() {
 }
 
 void Game::update(float deltaTime) {
+    Vector2 direction = {0, 0};
+    float speed = 500 * deltaTime;
+
+    direction.x = IsKeyDown(KEY_RIGHT) - IsKeyDown(KEY_LEFT);
+    direction.y = IsKeyDown(KEY_DOWN) - IsKeyDown(KEY_UP);
+
+    Vector2 normalizedDirection = Vector2Normalize(direction);
+    direction = Vector2Scale(normalizedDirection, speed);
+
+    _player.move(direction);
+    followPlayer();
+
     (void)deltaTime;
 }
 
-void drawGrid(int screenWidth, int screenHeight) {
-    const int gridSpacing = 50;
+void drawGrid(int screenWidth, int screenHeight, Camera2D camera) {
+    const int gridSpacing = 20;
     const Color gridColor = LIGHTGRAY;
 
-    for (int x = 0; x < screenWidth; x += gridSpacing) {
-        DrawLine(x, 0, x, screenHeight, gridColor);
+    Vector2 cameraTarget = camera.target;
+
+    for (int x = camera.target.x - (int)camera.target.x % gridSpacing -
+                 screenWidth / 2;
+         x < camera.target.x + screenWidth / 2; x += gridSpacing) {
+        DrawLine(x, camera.target.y - screenHeight / 2, x,
+                 camera.target.y + screenHeight / 2, gridColor);
     }
 
-    for (int y = 0; y < screenHeight; y += gridSpacing) {
-        DrawLine(0, y, screenWidth, y, gridColor);
+    for (int y = camera.target.y - (int)camera.target.y % gridSpacing -
+                 screenHeight / 2;
+         y < camera.target.y + screenHeight / 2; y += gridSpacing) {
+        DrawLine(camera.target.x - screenWidth / 2, y,
+                 camera.target.x + screenWidth / 2, y, gridColor);
     }
+
+    float horizontalOffset = 600;
+    float verticalOffset = 275;
+
+    DrawLine(cameraTarget.x - horizontalOffset, cameraTarget.y - verticalOffset,
+             cameraTarget.x + horizontalOffset, cameraTarget.y - verticalOffset,
+             RED);
+    DrawLine(cameraTarget.x + horizontalOffset, cameraTarget.y - verticalOffset,
+             cameraTarget.x + horizontalOffset, cameraTarget.y + verticalOffset,
+             RED);
+    DrawLine(cameraTarget.x + horizontalOffset, cameraTarget.y + verticalOffset,
+             cameraTarget.x - horizontalOffset, cameraTarget.y + verticalOffset,
+             RED);
+    DrawLine(cameraTarget.x - horizontalOffset, cameraTarget.y + verticalOffset,
+             cameraTarget.x - horizontalOffset, cameraTarget.y - verticalOffset,
+             RED);
 }
 
 void Game::draw() {
     BeginDrawing();
     ClearBackground(RAYWHITE);
+    BeginMode2D(_camera);
 
-    drawGrid(_screenWidth, _screenHeight);
+    drawGrid(_screenWidth, _screenHeight, _camera);
+    _player.draw();
 
+    EndMode2D();
     EndDrawing();
 }
