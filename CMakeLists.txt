@@ -9,9 +9,11 @@ set(BUILD_SHARED_LIBS OFF)
 
 add_subdirectory(libs/raylib)
 
+
 include_directories(libs/entt/single_include)
 
 include_directories(libs/json/single_include)
+
 
 include_directories(src/)
 

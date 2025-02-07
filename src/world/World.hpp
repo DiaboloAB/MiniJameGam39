@@ -38,6 +38,8 @@ public:
     void drawChunk(Vector2 position);
 
 private:
+    Texture2D _tileset;
+
     std::unordered_map<std::pair<int, int>, Chunk,
                        std::hash<std::pair<int, int>>, PairEqual>
         _chunks;
