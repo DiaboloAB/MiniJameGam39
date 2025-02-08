@@ -7,70 +7,64 @@
 
 #include "Menu.hpp"
 #include "raylib.h"
-#include "button/button.hpp"
-#include "./scene/Scene.hpp"
 
-Menu::Menu()
-{
+Menu::Menu(int screenWidth, int screenHeight)
+    : _screenWidth(screenWidth),
+      _screenHeight(screenHeight),
+      _playButton(610, 550, "assets/button/groupe_button.png",
+                  "assets/button/sound-button.wav",
+                  "assets/Font/pixantiqua.png", "Play", 4, 2, WHITE),
+      _quitButton(1010, 550, "assets/button/groupe_button.png",
+                  "assets/button/sound-button.wav",
+                  "assets/Font/pixantiqua.png", "Quit", 4, 2, WHITE) {
+    _midground = LoadTexture("./assets/paralax/layers/back-buildings.png");
+    _background = LoadTexture("./assets/paralax/layers/far-buildings.png");
+    _foreground = LoadTexture("./assets/paralax/layers/foreground.png");
 }
 
-Menu::~Menu()
-{
+Menu::~Menu() {
 }
 
+SceneType Menu::update(float _deltaTime) {
+    _scrollingBack -= 0.2f;
+    _scrollingMid -= 1.0f;
+    _scrollingFore -= 2.0f;
 
-SceneType Menu::paralax(int screenWidth, int screenHeight)
-{
-    Texture2D midground = LoadTexture("./assets/paralax/layers/back-buildings.png");
-    Texture2D background = LoadTexture("./assets/paralax/layers/far-buildings.png");
-    Texture2D foreground = LoadTexture("./assets/paralax/layers/foreground.png");
+    if (_scrollingBack <= -_background.width * 5)
+        _scrollingBack = 0;
+    if (_scrollingMid <= -_midground.width * 5)
+        _scrollingMid = 0;
+    if (_scrollingFore <= -_foreground.width * 5)
+        _scrollingFore = 0;
 
-    float scrollingBack = 0.0f;
-    float scrollingMid = 0.0f;
-    float scrollingFore = 0.0f;
-
-    Button playButton(610, 550, "assets/button/groupe_button.png", "assets/button/sound-button.wav", "assets/Font/pixantiqua.png", "Play", 4, 2, WHITE);
-    Button quitButton(1010, 550, "assets/button/groupe_button.png", "assets/button/sound-button.wav", "assets/Font/pixantiqua.png", "Quit", 4, 2, WHITE);
-
-    while (!WindowShouldClose())
-    {
-        scrollingBack -= 0.2f;
-        scrollingMid -= 1.0f;
-        scrollingFore -= 2.0f;
-
-        if (scrollingBack <= -background.width * 5) scrollingBack = 0;
-        if (scrollingMid <= -midground.width * 5) scrollingMid = 0;
-        if (scrollingFore <= -foreground.width * 5) scrollingFore = 0;
-
-        BeginDrawing();
-        ClearBackground(GetColor(0x052c46ff));
-
-        DrawTextureEx(background, (Vector2){ scrollingBack, 20 }, 0.0f, 5.0f, WHITE);
-        DrawTextureEx(background, (Vector2){ background.width*5 + scrollingBack, 20 }, 0.0f, 5.0f, WHITE);
-        DrawTextureEx(midground, (Vector2){ scrollingMid, 20 }, 0.0f, 5.0f, WHITE);
-        DrawTextureEx(midground, (Vector2){ midground.width*5 + scrollingMid, 20 }, 0.0f, 5.0f, WHITE);
-        DrawTextureEx(foreground, (Vector2){ scrollingFore, 70 }, 0.0f, 5.0f, WHITE);
-        DrawTextureEx(foreground, (Vector2){ foreground.width*5 + scrollingFore, 70 }, 0.0f, 5.0f, WHITE);
-
-        DrawText("BRADD PITT SIMULATOR", 320, 440, 100, RED);
-        DrawText("BRADD PITT SIMULATOR", 320, 430, 100, WHITE);
-
-        playButton.Draw();
-        quitButton.Draw();
-
-        EndDrawing();
-
-        if (playButton.IsClicked()) {
-            return SceneType::GAME;
-        }
-        if (quitButton.IsClicked()) {
-            return SceneType::EXIT;
-        }
+    if (_playButton.IsClicked()) {
+        return SceneType::GAME;
     }
-
-    UnloadTexture(background);
-    UnloadTexture(midground);
-    UnloadTexture(foreground);
-
+    if (_quitButton.IsClicked()) {
+        return SceneType::EXIT;
+    }
     return SceneType::MENU;
+}
+
+void Menu::draw() {
+    DrawTextureEx(_background, (Vector2){_scrollingBack, 20}, 0.0f, 5.0f,
+                  WHITE);
+    DrawTextureEx(_background,
+                  (Vector2){_background.width * 5 + _scrollingBack, 20}, 0.0f,
+                  5.0f, WHITE);
+    DrawTextureEx(_midground, (Vector2){_scrollingMid, 20}, 0.0f, 5.0f, WHITE);
+    DrawTextureEx(_midground,
+                  (Vector2){_midground.width * 5 + _scrollingMid, 20}, 0.0f,
+                  5.0f, WHITE);
+    DrawTextureEx(_foreground, (Vector2){_scrollingFore, 70}, 0.0f, 5.0f,
+                  WHITE);
+    DrawTextureEx(_foreground,
+                  (Vector2){_foreground.width * 5 + _scrollingFore, 70}, 0.0f,
+                  5.0f, WHITE);
+
+    DrawText("BRADD PITT SIMULATOR", 320, 440, 100, RED);
+    DrawText("BRADD PITT SIMULATOR", 320, 430, 100, WHITE);
+
+    _playButton.Draw();
+    _quitButton.Draw();
 }

@@ -4,7 +4,7 @@
  * Date, Location: 2025, Rennes
  **********************************************************************************/
 
-#include "./scene/Scene.hpp"
+#include "./scene/SceneType.hpp"
 #include "Game.hpp"
 #include "raylib.h"
 #include "raymath.h"
@@ -34,20 +34,7 @@ Game::Game(int screenWidth, int screenHeight)
 Game::~Game() {
 }
 
-SceneType Game::run() {
-    while (!WindowShouldClose()) {
-        auto currentTime = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<float> elapsedTime = currentTime - _lastTime;
-        _deltaTime = elapsedTime.count();
-        _lastTime = currentTime;
-
-        update(_deltaTime);
-        draw();
-    }
-    return SceneType::GAME;
-}
-
-void Game::update(float deltaTime) {
+SceneType Game::update(float deltaTime) {
     Vector2 direction = {0, 0};
     float speed = 500 * deltaTime;
 
@@ -93,6 +80,7 @@ void Game::update(float deltaTime) {
         _spawnTimer = 0;
     }
     _entityManager->update(deltaTime, _player.get(), _world.get());
+    return SceneType::GAME;
 }
 
 void drawGrid(int screenWidth, int screenHeight, Camera2D camera) {
@@ -137,8 +125,6 @@ void drawCameraTarget(Camera2D camera) {
 }
 
 void Game::draw() {
-    BeginDrawing();
-    ClearBackground(RAYWHITE);
     BeginMode2D(_camera);
 
     drawGrid(_screenWidth, _screenHeight, _camera);
@@ -158,7 +144,6 @@ void Game::draw() {
     EndMode2D();
 
     _hud->draw();
-    EndDrawing();
 }
 
 void Game::drawArrow() {

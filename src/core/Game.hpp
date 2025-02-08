@@ -16,8 +16,7 @@
 #include <chrono>
 #include <memory>
 
-enum class SceneType;
-
+#include "scene/SceneType.hpp"
 class Game {
 public:
     Game(int screenWidth = 1920, int screenHeight = 1080);
@@ -26,8 +25,7 @@ public:
     void initCamera();
     void followPlayer();
 
-    SceneType run();
-    void update(float deltaTime);
+    SceneType update(float deltaTime);
     void draw();
     void drawArrow();
     void drawDrop();
