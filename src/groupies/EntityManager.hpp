@@ -20,7 +20,9 @@ public:
     int spawnEntity(Vector2 position);
     void killEntity(int id);
 
-    void update(float deltaTime);
+    void update(float deltaTime, Player *player, World *world);
+
+    void handleCollision(Entity *entity1, Entity *entity2);
 
     void draw();
 

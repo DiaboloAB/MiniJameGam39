@@ -78,11 +78,12 @@ void Game::update(float deltaTime) {
     }
     followPlayer();
 
-    // _spawnTimer += deltaTime;
-    // if (_spawnTimer > 3) {
-    //     _entityManager->spawnEntity(_player->getPosition());
-    //     _spawnTimer = 0;
-    // }
+    _spawnTimer += deltaTime;
+    if (_spawnTimer > 3) {
+        _entityManager->spawnEntity(_player->getPosition());
+        _spawnTimer = 0;
+    }
+    _entityManager->update(deltaTime, _player.get(), _world.get());
 }
 
 void drawGrid(int screenWidth, int screenHeight, Camera2D camera) {
@@ -141,7 +142,7 @@ void Game::draw() {
     _player->draw();
     _entityManager->draw();
 
-    drawCameraTarget(_camera);
+    // drawCameraTarget(_camera);
 
     EndMode2D();
     EndDrawing();

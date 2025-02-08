@@ -8,12 +8,12 @@
 
 Entity::Entity() {
     _position = {0, 0};
-    // Texture2D texture = LoadTexture("assets/fan1.png");
-    // if (texture.id == 0) {
-    //     throw std::runtime_error("Failed to load Entity texture");
-    // }
-    // _animation =
-    //     new Animation(texture, texture.width / 4, texture.height / 3, 0.1f);
+    Texture2D texture = LoadTexture("assets/fan1.png");
+    if (texture.id == 0) {
+        throw std::runtime_error("Failed to load Entity texture");
+    }
+    _animation =
+        new Animation(texture, texture.width / 4, texture.height / 3, 0.1f);
     _direction = 0;
 }
 
@@ -27,29 +27,70 @@ void Entity::move(Vector2 direction) {
     // _position.x += direction.x;
     // _position.y += direction.y;
 
-    if (direction.x > 0) {
+    if (direction.x > 0.5) {
         _direction = 3;  // Right
-    } else if (direction.x < 0) {
+    } else if (direction.x < -0.5) {
         _direction = 0;  // Left
-    } else if (direction.y > 0) {
+    } else if (direction.y > 0.5) {
         _direction = 1;  // Down
-    } else if (direction.y < 0) {
+    } else if (direction.y < -0.5) {
         _direction = 2;  // Up
     }
 }
 
-void Entity::update(float deltaTime) {
-    if (_isMoving) {
+void Entity::update(float deltaTime, Player* player, World* world) {
+    Vector2 direction = {0, 0};
+    float speed = 400 * deltaTime;
+
+    direction.x = player->getPosition().x - _position.x;
+    direction.y = player->getPosition().y - _position.y;
+
+    if (Vector2Distance(player->getPosition(), _position) < 5) {
+        return;
+    }
+
+    if (Vector2Length(direction) > 0) {
+        direction = Vector2Normalize(direction);
+        direction = Vector2Scale(direction, speed);
+
+        move(direction);
+
+        Vector2 newPosition = getPosition();
+        newPosition.x += direction.x;
+        setPosition(newPosition);
+
+        Rectangle playerBoundingBox = getBoundingBox();
+        Rectangle collision = world->getCollisions(playerBoundingBox);
+
+        if (collision.width != 0 && collision.height != 0) {
+            newPosition.x -= direction.x;
+            setPosition(newPosition);
+        }
+
+        newPosition = getPosition();
+        newPosition.y += direction.y;
+        setPosition(newPosition);
+
+        playerBoundingBox = getBoundingBox();
+        collision = world->getCollisions(playerBoundingBox);
+
+        if (collision.width != 0 && collision.height != 0) {
+            newPosition.y -= direction.y;
+            setPosition(newPosition);
+        }
+
         _animation->update(deltaTime, 3);
-    } else {
-        _animation->update(deltaTime, 1);
     }
 }
 
 void Entity::draw() {
-    // _animation->draw(_position, _direction, 4.0f);
+    _animation->draw(_position, _direction, 4.0f);
 }
 
 Rectangle Entity::getBoundingBox() {
     return {_position.x - 25, _position.y - 25, 50, 50};
+}
+
+Rectangle Entity::getTinyBoundingBox() {
+    return {_position.x - 10, _position.y - 10, 20, 20};
 }
