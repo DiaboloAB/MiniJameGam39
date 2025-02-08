@@ -18,6 +18,7 @@ Game::Game(int screenWidth, int screenHeight)
 
     _player = std::make_unique<Player>();
     _world = std::make_unique<World>();
+    _entityManager = std::make_unique<EntityManager>();
 
     initCamera();
 }
@@ -51,33 +52,25 @@ void Game::update(float deltaTime) {
 
         _player->move(direction);
         _player->update(deltaTime);
-        // Move the player on the X axis
         Vector2 newPosition = _player->getPosition();
         newPosition.x += direction.x;
         _player->setPosition(newPosition);
 
-        // Check for collisions on the X axis
         Rectangle playerBoundingBox = _player->getBoundingBox();
         Rectangle collision = _world->getCollisions(playerBoundingBox);
 
-        // If a collision is detected, adjust the player's position on the X
-        // axis
         if (collision.width != 0 && collision.height != 0) {
             newPosition.x -= direction.x;
             _player->setPosition(newPosition);
         }
 
-        // Move the player on the Y axis
         newPosition = _player->getPosition();
         newPosition.y += direction.y;
         _player->setPosition(newPosition);
 
-        // Check for collisions on the Y axis
         playerBoundingBox = _player->getBoundingBox();
         collision = _world->getCollisions(playerBoundingBox);
 
-        // If a collision is detected, adjust the player's position on the Y
-        // axis
         if (collision.width != 0 && collision.height != 0) {
             newPosition.y -= direction.y;
             _player->setPosition(newPosition);
@@ -85,7 +78,11 @@ void Game::update(float deltaTime) {
     }
     followPlayer();
 
-    (void)deltaTime;
+    // _spawnTimer += deltaTime;
+    // if (_spawnTimer > 3) {
+    //     _entityManager->spawnEntity(_player->getPosition());
+    //     _spawnTimer = 0;
+    // }
 }
 
 void drawGrid(int screenWidth, int screenHeight, Camera2D camera) {
@@ -142,6 +139,7 @@ void Game::draw() {
                            (Vector2){400, 400});
 
     _player->draw();
+    _entityManager->draw();
 
     drawCameraTarget(_camera);
 

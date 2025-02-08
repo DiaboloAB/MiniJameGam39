@@ -7,6 +7,7 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "groupies/EntityManager.hpp"
 #include "player/Player.hpp"
 #include "world/World.hpp"
 
@@ -38,6 +39,9 @@ private:
     std::unique_ptr<Player> _player;
 
     std::unique_ptr<World> _world;
+    std::unique_ptr<EntityManager> _entityManager;
+
+    float _spawnTimer;
 };
 
 #endif  // GAME_H
