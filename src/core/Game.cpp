@@ -84,7 +84,7 @@ void Game::update(float deltaTime) {
             _player->setPosition(newPosition);
         }
     }
-    _hud->update(deltaTime, 1, 0); // changer valeurs pour celles du joueur
+    _hud->update(deltaTime, _player->getPanic(), _player->getBonus());
     followPlayer();
 
     (void)deltaTime;

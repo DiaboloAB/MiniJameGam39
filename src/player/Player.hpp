@@ -31,12 +31,20 @@ public:
     Rectangle getBoundingBox();
 
     void draw();
+    int getPanic() {
+        return _panic;
+    }
+    int getBonus() {
+        return _bonus;
+    }
 
 private:
     Vector2 _position;
     Animation* _animation;
     int _direction;  // 0: Left, 1: Down, 2: Up, 3: Right
     bool _isMoving;
+    int _panic; // 16 levels of panic
+    int _bonus;
 };
 
 #endif  // PLAYER_H

@@ -22,6 +22,7 @@ public:
 
 private:
     Animation* _panicBarAnimation;
+    Texture2D _panicBarIcon;
     Texture2D _panicBarTexture;
     int _panicCount; // 16 levels of panic
     Texture2D _bonusTexture;
