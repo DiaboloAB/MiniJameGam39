@@ -8,6 +8,7 @@
 #include "Menu.hpp"
 #include "raylib.h"
 #include "button/button.hpp"
+#include "./scene/Scene.hpp"
 
 Menu::Menu()
 {
@@ -17,16 +18,17 @@ Menu::~Menu()
 {
 }
 
-int Menu::paralax(int screenWidth, int screenHeight)
-{
 
+SceneType Menu::paralax(int screenWidth, int screenHeight)
+{
     Texture2D midground = LoadTexture("./assets/paralax/layers/back-buildings.png");
-    Texture2D  background= LoadTexture("./assets/paralax/layers/far-buildings.png");
+    Texture2D background = LoadTexture("./assets/paralax/layers/far-buildings.png");
     Texture2D foreground = LoadTexture("./assets/paralax/layers/foreground.png");
 
     float scrollingBack = 0.0f;
     float scrollingMid = 0.0f;
     float scrollingFore = 0.0f;
+
     Button playButton(610, 550, "assets/button/groupe_button.png", "assets/button/sound-button.wav", "assets/Font/pixantiqua.png", "Play", 4, 2, WHITE);
     Button quitButton(1010, 550, "assets/button/groupe_button.png", "assets/button/sound-button.wav", "assets/Font/pixantiqua.png", "Quit", 4, 2, WHITE);
 
@@ -39,38 +41,36 @@ int Menu::paralax(int screenWidth, int screenHeight)
         if (scrollingBack <= -background.width * 5) scrollingBack = 0;
         if (scrollingMid <= -midground.width * 5) scrollingMid = 0;
         if (scrollingFore <= -foreground.width * 5) scrollingFore = 0;
-        
 
         BeginDrawing();
+        ClearBackground(GetColor(0x052c46ff));
 
-            ClearBackground(GetColor(0x052c46ff));
+        DrawTextureEx(background, (Vector2){ scrollingBack, 20 }, 0.0f, 5.0f, WHITE);
+        DrawTextureEx(background, (Vector2){ background.width*5 + scrollingBack, 20 }, 0.0f, 5.0f, WHITE);
+        DrawTextureEx(midground, (Vector2){ scrollingMid, 20 }, 0.0f, 5.0f, WHITE);
+        DrawTextureEx(midground, (Vector2){ midground.width*5 + scrollingMid, 20 }, 0.0f, 5.0f, WHITE);
+        DrawTextureEx(foreground, (Vector2){ scrollingFore, 70 }, 0.0f, 5.0f, WHITE);
+        DrawTextureEx(foreground, (Vector2){ foreground.width*5 + scrollingFore, 70 }, 0.0f, 5.0f, WHITE);
 
-            DrawTextureEx(background, (Vector2){ scrollingBack, 20 }, 0.0f, 5.0f, WHITE);
-            DrawTextureEx(background, (Vector2){ background.width*5 + scrollingBack, 20 }, 0.0f, 5.0f, WHITE);
+        DrawText("BRADD PITT SIMULATOR", 320, 440, 100, RED);
+        DrawText("BRADD PITT SIMULATOR", 320, 430, 100, WHITE);
 
-            DrawTextureEx(midground, (Vector2){ scrollingMid, 20 }, 0.0f, 5.0f, WHITE);
-            DrawTextureEx(midground, (Vector2){ midground.width*5 + scrollingMid, 20 }, 0.0f, 5.0f, WHITE);
+        playButton.Draw();
+        quitButton.Draw();
 
-            DrawTextureEx(foreground, (Vector2){ scrollingFore, 70 }, 0.0f, 5.0f, WHITE);
-            DrawTextureEx(foreground, (Vector2){ foreground.width*5 + scrollingFore, 70 }, 0.0f, 5.0f, WHITE);
-
-            DrawText("(c) Cyberpunk Street Environment by Luis Zuno (@ansimuz)", 10, 10, 20, RED);
-            DrawText("Game made by Alexis Boitel, Justine Loizel, Augustin", 10, 980, 20, RED);
-            DrawText("Game made by Alexis Boitel, Justine Loizel, Augustin", 10, 978, 20, WHITE);
-
-            DrawText("BRADD PITT SIMULATOR", 320, 440, 100, RED);
-            DrawText("BRADD PITT SIMULATOR", 320, 430, 100, WHITE);
-
-            playButton.Draw();
-            quitButton.Draw();
         EndDrawing();
+
+        if (playButton.IsClicked()) {
+            return SceneType::GAME;
+        }
+        if (quitButton.IsClicked()) {
+            return SceneType::EXIT;
+        }
     }
 
     UnloadTexture(background);
     UnloadTexture(midground);
     UnloadTexture(foreground);
 
-    CloseWindow();
-
-    return 0;
+    return SceneType::MENU;
 }
