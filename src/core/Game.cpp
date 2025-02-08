@@ -18,8 +18,8 @@ Game::Game(int screenWidth, int screenHeight)
 
     _player = std::make_unique<Player>();
     _world = std::make_unique<World>();
+    _hud = std::make_unique<HUD>();
     _entityManager = std::make_unique<EntityManager>();
-
     initCamera();
 }
 
@@ -76,6 +76,7 @@ void Game::update(float deltaTime) {
             _player->setPosition(newPosition);
         }
     }
+    _hud->update(deltaTime, _player->getPanic(), _player->getBonus());
     followPlayer();
 
     _spawnTimer += deltaTime;
@@ -145,5 +146,7 @@ void Game::draw() {
     // drawCameraTarget(_camera);
 
     EndMode2D();
+
+    _hud->draw();
     EndDrawing();
 }

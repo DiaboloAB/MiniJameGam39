@@ -5,6 +5,7 @@
  **********************************************************************************/
 
 #include "Animation.hpp"
+#include <iostream>
 
 Animation::Animation(Texture2D texture, int frameWidth, int frameHeight,
                      float frameTime) {

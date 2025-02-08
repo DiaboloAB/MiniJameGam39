@@ -15,6 +15,8 @@ Player::Player() {
     _animation =
         new Animation(texture, texture.width / 4, texture.height / 3, 0.1f);
     _direction = 0;
+    _panic = 0;
+    _bonus = 0;
 }
 
 Player::~Player() {
