@@ -18,7 +18,7 @@ HUD::HUD() {
         throw std::runtime_error("Failed to load HUD textures");
     }
 
-    _panicCount = 1;
+    _panicCount = 0;
     _bonusCount = 0;
     _elapsedTime = 0.0f;
 }
@@ -54,7 +54,7 @@ void HUD::draw() {
     DrawTextureEx(_timeTexture, {static_cast<float>(timeX), static_cast<float>(hudY)}, 0.0f, 1.0f, WHITE);
     DrawText(timeString.c_str(), timeX + textOffsetX, hudY + 5, 20, BLACK);
 
-    int bonusX = timeX + spacing;
+    int bonusX = timeX + spacing + iconSize;
     DrawTextureEx(_bonusTexture, {static_cast<float>(bonusX), static_cast<float>(hudY)}, 0.0f, 1.0f, WHITE);
     DrawText(std::to_string(_bonusCount).c_str(), bonusX + textOffsetX, hudY + 5, 20, BLACK);
 

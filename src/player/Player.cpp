@@ -15,7 +15,7 @@ Player::Player() {
     _animation =
         new Animation(texture, texture.width / 4, texture.height / 3, 0.1f);
     _direction = 0;
-    _panic = 1;
+    _panic = 0;
     _bonus = 0;
 }
 
@@ -37,7 +37,6 @@ void Player::move(Vector2 direction) {
         _direction = 1;  // Down
     } else if (direction.y < 0) {
         _direction = 2;  // Up
-        _panic++;
     }
 }
 
