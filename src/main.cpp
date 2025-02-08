@@ -14,23 +14,8 @@ int main() {
     Game game = Game(1920, 1080);
     Menu menu;
     InitAudioDevice();
-    menu.paralax(1920, 1080);
-    //game.run();
-    // load image
-    // Image img = LoadImage("assets/test.jpg");
-
-    // while (!WindowShouldClose()) {
-    //     BeginDrawing();
-
-    //     ClearBackground(RAYWHITE);
-
-    //     DrawText("Congrats! You created your first window!", 190, 200, 20,
-    //              LIGHTGRAY);
-
-    //     DrawTexture(LoadTextureFromImage(img), 0, 0, WHITE);
-
-    //     EndDrawing();
-    // }
+    //menu.paralax(1920, 1080);
+    game.run();
 
 
     // AStar::Generator generator;
