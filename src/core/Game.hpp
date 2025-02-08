@@ -48,6 +48,7 @@ private:
 
     float _spawnTimer;
     bool _drivingMode = false;
+    float _drivingTimer = 0.0f;
 };
 
 #endif  // GAME_H

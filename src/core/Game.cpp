@@ -78,47 +78,60 @@ void Game::update(float deltaTime) {
                 _player->setPosition(newPosition);
             }
         }
-        if (CheckCollisionRecs(_player->getBoundingBox(), _car->getBoundingBox())) {
+        if (_car && CheckCollisionRecs(_player->getBoundingBox(), _car->getBoundingBox())) {
             _drivingMode = true;
+            _drivingTimer = 10.0f;
             _car->setPosition(_player->getPosition());
         }
     }
 
     if (_drivingMode) {
-        if (IsKeyDown(KEY_UP)) {
-            _car->accelerate(600 * deltaTime);  // Accélère
-        }
-        if (IsKeyDown(KEY_DOWN)) {
-            _car->accelerate(-150 * deltaTime); // Freine
-        }
-        if (IsKeyDown(KEY_LEFT)) {
-            _car->turn(-120 * deltaTime); // Tourne à gauche
-        }
-        if (IsKeyDown(KEY_RIGHT)) {
-            _car->turn(120 * deltaTime); // Tourne à droite
-        }
+        _drivingTimer -= deltaTime;
 
-        Vector2 prevPosition = _car->getPosition();
-
-        _car->update(deltaTime);
-        Vector2 newPosition = _car->getPosition();
-
-        Rectangle carBoundingBox = _car->getBoundingBox();
-        Rectangle collision = _world->getCollisions(carBoundingBox);
-
-        if (collision.width != 0 && collision.height != 0) {
-            _car->setPosition({newPosition.x, prevPosition.y});
-            if (_world->getCollisions(_car->getBoundingBox()).width != 0) {
-                _car->setPosition(prevPosition);
+        if (_car) {
+            if (IsKeyDown(KEY_UP)) {
+                _car->accelerate(600 * deltaTime);  // Accélère
+            }
+            if (IsKeyDown(KEY_DOWN)) {
+                _car->accelerate(-150 * deltaTime); // Freine
+            }
+            if (IsKeyDown(KEY_LEFT)) {
+                _car->turn(-120 * deltaTime); // Tourne à gauche
+            }
+            if (IsKeyDown(KEY_RIGHT)) {
+                _car->turn(120 * deltaTime); // Tourne à droite
             }
 
-            _car->setPosition({prevPosition.x, newPosition.y});
-            if (_world->getCollisions(_car->getBoundingBox()).width != 0) {
-                _car->setPosition(prevPosition);
+            Vector2 prevPosition = _car->getPosition();
+
+            _car->update(deltaTime);
+            Vector2 newPosition = _car->getPosition();
+
+            Rectangle carBoundingBox = _car->getBoundingBox();
+            Rectangle collision = _world->getCollisions(carBoundingBox);
+
+            if (collision.width != 0 && collision.height != 0) {
+                _car->setPosition({newPosition.x, prevPosition.y});
+                if (_world->getCollisions(_car->getBoundingBox()).width != 0) {
+                    _car->setPosition(prevPosition);
+                }
+
+                _car->setPosition({prevPosition.x, newPosition.y});
+                if (_world->getCollisions(_car->getBoundingBox()).width != 0) {
+                    _car->setPosition(prevPosition);
+                }
             }
+            Vector2 newPositionP = _car->getPosition();
+            _player->setPosition(newPositionP);
         }
-        Vector2 newPositionP = _car->getPosition();
-        _player->setPosition(newPositionP);
+
+        if (_drivingTimer <= 0) {
+            _drivingMode = false;
+            if (_car) {
+                _player->setPosition(_car->getPosition());
+            }
+            _car.reset();
+        }
     }
 
     _hud->update(deltaTime, _player->getPanic(), _player->getBonus());
@@ -185,11 +198,13 @@ void Game::draw() {
                        (Vector2){(float)_screenWidth, (float)_screenHeight} -
                            (Vector2){400, 400});
 
-    if (_drivingMode) {
+    if (_drivingMode && _car) {
         _car->draw();
     } else {
         _player->draw();
-        _car->draw();
+        if (_car) {
+            _car->draw();
+        }
     }
     _entityManager->draw();
 
