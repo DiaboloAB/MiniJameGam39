@@ -11,6 +11,8 @@
 #include "groupies/EntityManager.hpp"
 #include "player/Player.hpp"
 #include "world/World.hpp"
+#include "player/Car.hpp"
+#include "HUD.hpp"
 
 // std
 #include <chrono>
@@ -30,6 +32,9 @@ public:
     void drawArrow();
     void drawDrop();
 
+    void handlePlayerInput(float deltaTime, Vector2 direction, float speed);
+    void handleCarInput(float deltaTime);
+
 private:
     float _deltaTime;
     std::chrono::high_resolution_clock::time_point _lastTime;
@@ -40,6 +45,7 @@ private:
     Camera2D _camera;
 
     std::unique_ptr<Player> _player;
+    std::unique_ptr<Car> _car;
 
     std::unique_ptr<World> _world;
 
@@ -49,6 +55,8 @@ private:
     Texture2D _drop;
 
     float _spawnTimer;
+    bool _drivingMode = false;
+    float _drivingTimer = 0.0f;
 
     Vector2 _winPosition;
 };
