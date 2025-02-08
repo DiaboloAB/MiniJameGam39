@@ -47,51 +47,62 @@ void Game::update(float deltaTime) {
     direction.x = IsKeyDown(KEY_RIGHT) - IsKeyDown(KEY_LEFT);
     direction.y = IsKeyDown(KEY_DOWN) - IsKeyDown(KEY_UP);
 
-    if (Vector2Length(direction) > 0) {
-        direction = Vector2Normalize(direction);
-        direction = Vector2Scale(direction, speed);
-
-        _player->move(direction);
-        _player->update(deltaTime);
-        Vector2 newPosition = _player->getPosition();
-        newPosition.x += direction.x;
-        _player->setPosition(newPosition);
-
-        Rectangle playerBoundingBox = _player->getBoundingBox();
-        Rectangle collision = _world->getCollisions(playerBoundingBox);
-
-        if (collision.width != 0 && collision.height != 0) {
-            newPosition.x -= direction.x;
+    if (!_drivingMode) {
+        if (Vector2Length(direction) > 0) {
+            direction = Vector2Normalize(direction);
+            direction = Vector2Scale(direction, speed);
+    
+            _player->move(direction);
+            _player->update(deltaTime);
+            Vector2 newPosition = _player->getPosition();
+            newPosition.x += direction.x;
             _player->setPosition(newPosition);
+    
+            Rectangle playerBoundingBox = _player->getBoundingBox();
+            Rectangle collision = _world->getCollisions(playerBoundingBox);
+    
+            if (collision.width != 0 && collision.height != 0) {
+                newPosition.x -= direction.x;
+                _player->setPosition(newPosition);
+            }
+    
+            newPosition = _player->getPosition();
+            newPosition.y += direction.y;
+            _player->setPosition(newPosition);
+    
+            playerBoundingBox = _player->getBoundingBox();
+            collision = _world->getCollisions(playerBoundingBox);
+    
+            if (collision.width != 0 && collision.height != 0) {
+                newPosition.y -= direction.y;
+                _player->setPosition(newPosition);
+            }
+        }
+        if (CheckCollisionRecs(_player->getBoundingBox(), _car->getBoundingBox())) {
+            _drivingMode = true;
+            _car->setPosition(_player->getPosition());
+        }
+    }
+
+    if (_drivingMode) {
+        if (IsKeyDown(KEY_W)) {
+            _car->accelerate(600 * deltaTime);  // Accélère
+        }
+        if (IsKeyDown(KEY_S)) {
+            _car->accelerate(-150 * deltaTime); // Freine
+        }
+        if (IsKeyDown(KEY_A)) {
+            _car->turn(-120 * deltaTime); // Tourne à gauche
+        }
+        if (IsKeyDown(KEY_D)) {
+            _car->turn(120 * deltaTime); // Tourne à droite
         }
 
-        newPosition = _player->getPosition();
-        newPosition.y += direction.y;
+        _car->update(deltaTime);
+        Vector2 newPosition = _car->getPosition();
         _player->setPosition(newPosition);
-
-        playerBoundingBox = _player->getBoundingBox();
-        collision = _world->getCollisions(playerBoundingBox);
-
-        if (collision.width != 0 && collision.height != 0) {
-            newPosition.y -= direction.y;
-            _player->setPosition(newPosition);
-        }
     }
 
-    if (IsKeyDown(KEY_W)) {
-        _car->accelerate(100 * deltaTime);  // Accélère
-    }
-    if (IsKeyDown(KEY_S)) {
-        _car->accelerate(-100 * deltaTime); // Freine
-    }
-    if (IsKeyDown(KEY_A)) {
-        _car->turn(-120 * deltaTime); // Tourne à gauche
-    }
-    if (IsKeyDown(KEY_D)) {
-        _car->turn(120 * deltaTime); // Tourne à droite
-    }
-
-    _car->update(deltaTime);
     _hud->update(deltaTime, _player->getPanic(), _player->getBonus());
     followPlayer();
 
@@ -156,8 +167,14 @@ void Game::draw() {
                        (Vector2){(float)_screenWidth, (float)_screenHeight} -
                            (Vector2){400, 400});
 
-    _player->draw();
-    _car->draw();
+    if (_drivingMode) {
+        _car->draw();
+    } else {
+        _player->draw();
+        _car->draw();
+    }
+    // _player->draw();
+    // _car->draw();
     _entityManager->draw();
 
     // drawCameraTarget(_camera);

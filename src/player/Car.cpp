@@ -7,7 +7,7 @@
 #include "Car.hpp"
 
 Car::Car() {
-    _position = {0, 0};
+    _position = {100, 0};
     Texture2D texture = LoadTexture("assets/car.png");
     if (texture.id == 0) {
         throw std::runtime_error("Failed to load car texture");
@@ -64,4 +64,8 @@ void Car::turn(float angle) {
 
 void Car::draw() {
     _animation->draw(_position, _direction, 4.0f);
+}
+
+Rectangle Car::getBoundingBox() {
+    return {_position.x - 25, _position.y - 25, 50, 50};
 }

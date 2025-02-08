@@ -47,6 +47,7 @@ private:
     std::unique_ptr<EntityManager> _entityManager;
 
     float _spawnTimer;
+    bool _drivingMode = false;
 };
 
 #endif  // GAME_H

@@ -24,6 +24,10 @@ public:
     Vector2 getPosition() {
         return _position;
     }
+    void setPosition(Vector2 pos) {
+        _position = pos;
+    }
+    Rectangle getBoundingBox();
 
 private:
     Vector2 _position;
