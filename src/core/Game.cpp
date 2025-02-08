@@ -18,6 +18,7 @@ Game::Game(int screenWidth, int screenHeight)
 
     _player = std::make_unique<Player>();
     _world = std::make_unique<World>();
+    _hud = std::make_unique<HUD>();
 
     initCamera();
 }
@@ -83,6 +84,7 @@ void Game::update(float deltaTime) {
             _player->setPosition(newPosition);
         }
     }
+    _hud->update(deltaTime, 1, 0); // changer valeurs pour celles du joueur
     followPlayer();
 
     (void)deltaTime;
@@ -136,5 +138,7 @@ void Game::draw() {
     _player->draw();
 
     EndMode2D();
+
+    _hud->draw();
     EndDrawing();
 }

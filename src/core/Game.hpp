@@ -9,6 +9,7 @@
 
 #include "player/Player.hpp"
 #include "world/World.hpp"
+#include "HUD.hpp"
 
 // std
 #include <chrono>
@@ -38,6 +39,8 @@ private:
     std::unique_ptr<Player> _player;
 
     std::unique_ptr<World> _world;
+
+    std::unique_ptr<HUD> _hud;
 };
 
 #endif  // GAME_H
