@@ -85,22 +85,40 @@ void Game::update(float deltaTime) {
     }
 
     if (_drivingMode) {
-        if (IsKeyDown(KEY_W)) {
+        if (IsKeyDown(KEY_UP)) {
             _car->accelerate(600 * deltaTime);  // Accélère
         }
-        if (IsKeyDown(KEY_S)) {
+        if (IsKeyDown(KEY_DOWN)) {
             _car->accelerate(-150 * deltaTime); // Freine
         }
-        if (IsKeyDown(KEY_A)) {
+        if (IsKeyDown(KEY_LEFT)) {
             _car->turn(-120 * deltaTime); // Tourne à gauche
         }
-        if (IsKeyDown(KEY_D)) {
+        if (IsKeyDown(KEY_RIGHT)) {
             _car->turn(120 * deltaTime); // Tourne à droite
         }
 
+        Vector2 prevPosition = _car->getPosition();
+
         _car->update(deltaTime);
         Vector2 newPosition = _car->getPosition();
-        _player->setPosition(newPosition);
+
+        Rectangle carBoundingBox = _car->getBoundingBox();
+        Rectangle collision = _world->getCollisions(carBoundingBox);
+
+        if (collision.width != 0 && collision.height != 0) {
+            _car->setPosition({newPosition.x, prevPosition.y});
+            if (_world->getCollisions(_car->getBoundingBox()).width != 0) {
+                _car->setPosition(prevPosition);
+            }
+
+            _car->setPosition({prevPosition.x, newPosition.y});
+            if (_world->getCollisions(_car->getBoundingBox()).width != 0) {
+                _car->setPosition(prevPosition);
+            }
+        }
+        Vector2 newPositionP = _car->getPosition();
+        _player->setPosition(newPositionP);
     }
 
     _hud->update(deltaTime, _player->getPanic(), _player->getBonus());
@@ -173,8 +191,6 @@ void Game::draw() {
         _player->draw();
         _car->draw();
     }
-    // _player->draw();
-    // _car->draw();
     _entityManager->draw();
 
     // drawCameraTarget(_camera);
