@@ -22,9 +22,11 @@ public:
 
 private:
     Animation* _panicBarAnimation;
-    int _panicCount; // 6 levels of panic
+    Texture2D _panicBarTexture;
+    int _panicCount; // 16 levels of panic
     Texture2D _bonusTexture;
     int _bonusCount;
+    Texture2D _timeTexture;
     float _elapsedTime;
 };
 

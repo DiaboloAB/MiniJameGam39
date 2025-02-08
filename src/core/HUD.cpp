@@ -8,8 +8,10 @@
 
 HUD::HUD() {
     Texture2D panicBarTexture = LoadTexture("assets/panicbar.png");
-    _panicBarAnimation = new Animation(panicBarTexture, panicBarTexture.width / 6, panicBarTexture.height, 0.1f);
+    _panicBarAnimation = new Animation(panicBarTexture, panicBarTexture.width / 16, panicBarTexture.height, 0.1f);
+    _panicBarTexture = LoadTexture("assets/heart.png");
     _bonusTexture = LoadTexture("assets/bonus.png");
+    _timeTexture = LoadTexture("assets/clock.png");
     _panicCount = 1;
     _bonusCount = 0;
     _elapsedTime = 0.0f;
@@ -29,10 +31,23 @@ void HUD::update(float deltaTime, int panic, int bonus) {
 }
 
 void HUD::draw() {
-    DrawTexture(_bonusTexture, 10, 10, WHITE);
-    DrawText(std::to_string(_bonusCount).c_str(), 50, 10, 20, WHITE);
+    int startX = 20;  // Position de départ à gauche
+    int spacing = 100; // Espacement entre les éléments
+    int iconSize = 32; // Taille des icônes
+    int textOffsetX = iconSize + 10; // Décalage entre l'icône et le texte
+    int hudY = 20; // Hauteur uniforme
 
-    _panicBarAnimation->draw({GetScreenWidth() / 2, 10}, 0, 1.0f);
+    int timeX = startX;
+    DrawTextureEx(_timeTexture, {static_cast<float>(timeX), static_cast<float>(hudY)}, 0.0f, 1.0f, WHITE);
+    DrawText(std::to_string(static_cast<int>(_elapsedTime) / 60).c_str(), timeX + textOffsetX, hudY + 5, 20, BLACK);
 
-    DrawText(std::to_string(_elapsedTime).c_str(), 10, 50, 20, WHITE);
+    int bonusX = timeX + spacing;
+    DrawTextureEx(_bonusTexture, {static_cast<float>(bonusX), static_cast<float>(hudY)}, 0.0f, 1.0f, WHITE);
+    DrawText(std::to_string(_bonusCount).c_str(), bonusX + textOffsetX, hudY + 5, 20, BLACK);
+
+    int panicIconX = bonusX + spacing;
+    DrawTextureEx(_panicBarTexture, {static_cast<float>(panicIconX), static_cast<float>(hudY)}, 0.0f, 1.0f, WHITE);
+    
+    int panicBarX = panicIconX + textOffsetX + spacing + textOffsetX / 2;
+    _panicBarAnimation->draw({static_cast<float>(panicBarX), static_cast<float>(hudY + (iconSize / 2))}, 0, 1.0f);
 }
