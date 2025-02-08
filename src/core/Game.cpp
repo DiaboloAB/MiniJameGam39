@@ -19,7 +19,7 @@ Game::Game(int screenWidth, int screenHeight)
     _player = std::make_unique<Player>();
     _world = std::make_unique<World>();
     _hud = std::make_unique<HUD>();
-
+    _entityManager = std::make_unique<EntityManager>();
     initCamera();
 }
 
@@ -52,33 +52,25 @@ void Game::update(float deltaTime) {
 
         _player->move(direction);
         _player->update(deltaTime);
-        // Move the player on the X axis
         Vector2 newPosition = _player->getPosition();
         newPosition.x += direction.x;
         _player->setPosition(newPosition);
 
-        // Check for collisions on the X axis
         Rectangle playerBoundingBox = _player->getBoundingBox();
         Rectangle collision = _world->getCollisions(playerBoundingBox);
 
-        // If a collision is detected, adjust the player's position on the X
-        // axis
         if (collision.width != 0 && collision.height != 0) {
             newPosition.x -= direction.x;
             _player->setPosition(newPosition);
         }
 
-        // Move the player on the Y axis
         newPosition = _player->getPosition();
         newPosition.y += direction.y;
         _player->setPosition(newPosition);
 
-        // Check for collisions on the Y axis
         playerBoundingBox = _player->getBoundingBox();
         collision = _world->getCollisions(playerBoundingBox);
 
-        // If a collision is detected, adjust the player's position on the Y
-        // axis
         if (collision.width != 0 && collision.height != 0) {
             newPosition.y -= direction.y;
             _player->setPosition(newPosition);
@@ -87,7 +79,12 @@ void Game::update(float deltaTime) {
     _hud->update(deltaTime, _player->getPanic(), _player->getBonus());
     followPlayer();
 
-    (void)deltaTime;
+    _spawnTimer += deltaTime;
+    if (_spawnTimer > 3) {
+        _entityManager->spawnEntity(_player->getPosition());
+        _spawnTimer = 0;
+    }
+    _entityManager->update(deltaTime, _player.get(), _world.get());
 }
 
 void drawGrid(int screenWidth, int screenHeight, Camera2D camera) {
@@ -109,6 +106,10 @@ void drawGrid(int screenWidth, int screenHeight, Camera2D camera) {
         DrawLine(camera.target.x - screenWidth / 2, y - 5,
                  camera.target.x + screenWidth / 2, y - 5, gridColor);
     }
+}
+
+void drawCameraTarget(Camera2D camera) {
+    Vector2 cameraTarget = camera.target;
 
     float horizontalOffset = 500;
     float verticalOffset = 225;
@@ -133,9 +134,16 @@ void Game::draw() {
     BeginMode2D(_camera);
 
     drawGrid(_screenWidth, _screenHeight, _camera);
-    _world->drawChunk({0, 0});
+    _world->drawChunks(_camera.target - _camera.offset,
+                       (Vector2){(float)_screenWidth, (float)_screenHeight});
+    _world->drawChunks(_camera.target - _camera.offset + (Vector2){200, 200},
+                       (Vector2){(float)_screenWidth, (float)_screenHeight} -
+                           (Vector2){400, 400});
 
     _player->draw();
+    _entityManager->draw();
+
+    // drawCameraTarget(_camera);
 
     EndMode2D();
 

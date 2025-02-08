@@ -16,10 +16,13 @@
 class Tilemap {
 public:
     bool loadFromFile(const std::string& filename);
-    void draw(Texture2D tileset);
-    void drawWall();
+    void draw(Texture2D tileset, Vector2 position = {0, 0});
+    void draw(Texture2D tileset, Vector2 chunkPos, Vector2 camTopLeft,
+              Vector2 screenSize);
 
-    Rectangle getCollisions(Rectangle player);
+    void drawWall(Vector2 position = {0, 0});
+
+    Rectangle getCollisions(Rectangle player, Vector2 position = {0, 0});
 
 private:
     int width;
