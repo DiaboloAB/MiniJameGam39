@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(BUILD_SHARED_LIBS OFF)
 
 add_subdirectory(libs/raylib)
+add_compile_options(-Wno-c++11-narrowing)
 
 add_subdirectory(libs/tinyxml2)
 
