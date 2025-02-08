@@ -27,7 +27,8 @@ int Menu::paralax(int screenWidth, int screenHeight)
     float scrollingBack = 0.0f;
     float scrollingMid = 0.0f;
     float scrollingFore = 0.0f;
-    Button playButton(720, 550, "assets/button/groupe_button.png", "assets/button/buttonfx.wav", "assets/Font/pixantiqua.png", "Play", 4, 2, WHITE);
+    Button playButton(610, 550, "assets/button/groupe_button.png", "assets/button/sound-button.wav", "assets/Font/pixantiqua.png", "Play", 4, 2, WHITE);
+    Button quitButton(1010, 550, "assets/button/groupe_button.png", "assets/button/sound-button.wav", "assets/Font/pixantiqua.png", "Quit", 4, 2, WHITE);
 
     while (!WindowShouldClose())
     {
@@ -61,6 +62,7 @@ int Menu::paralax(int screenWidth, int screenHeight)
             DrawText("BRADD PITT SIMULATOR", 320, 430, 100, WHITE);
 
             playButton.Draw();
+            quitButton.Draw();
         EndDrawing();
     }
 
