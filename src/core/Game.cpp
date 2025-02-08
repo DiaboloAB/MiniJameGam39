@@ -30,6 +30,10 @@ Game::Game(int screenWidth, int screenHeight)
     _arrow = LoadTextureFromImage(arrow);
     Image drop = LoadImage("assets/drop.png");
     _drop = LoadTextureFromImage(drop);
+
+    _heartBeatShader = LoadShader(0, "assets/shaders/speed_effect.fs");
+    _resolutionLoc = GetShaderLocation(_heartBeatShader, "resolution");
+    _timeLoc = GetShaderLocation(_heartBeatShader, "time");
 }
 
 Game::~Game() {
@@ -106,12 +110,15 @@ void drawCameraTarget(Camera2D camera) {
 void Game::draw() {
     BeginMode2D(_camera);
 
+    float resolution[2] = {(float)_screenWidth, (float)_screenHeight};
+    SetShaderValue(_heartBeatShader, _resolutionLoc, resolution,
+                   SHADER_UNIFORM_VEC2);
+    float time = GetTime();
+    SetShaderValue(_heartBeatShader, _timeLoc, &time, SHADER_UNIFORM_FLOAT);
+
     drawGrid(_screenWidth, _screenHeight, _camera);
     _world->drawChunks(_camera.target - _camera.offset,
                        (Vector2){(float)_screenWidth, (float)_screenHeight});
-    _world->drawChunks(_camera.target - _camera.offset + (Vector2){200, 200},
-                       (Vector2){(float)_screenWidth, (float)_screenHeight} -
-                           (Vector2){400, 400});
 
     if (_drivingMode && _car) {
         _car->draw();
@@ -124,11 +131,17 @@ void Game::draw() {
     drawDrop();
     _entityManager->draw();
 
+    _world->drawChunks(_camera.target - _camera.offset,
+                       (Vector2){(float)_screenWidth, (float)_screenHeight}, 2);
+
     // drawCameraTarget(_camera);
     drawArrow();
 
     EndMode2D();
 
+    // BeginShaderMode(_heartBeatShader);
+    // DrawRectangle(0, 0, _screenWidth, _screenHeight, BLACK);
+    // EndShaderMode();
     _hud->draw();
 }
 

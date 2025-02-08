@@ -37,7 +37,7 @@ public:
     World();
     ~World();
 
-    void drawChunks(Vector2 camTopLeft, Vector2 screenSize);
+    void drawChunks(Vector2 camTopLeft, Vector2 screenSize, int layer = 1);
 
     Rectangle getCollisions(Rectangle player);
 

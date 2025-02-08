@@ -42,7 +42,7 @@ Vector2 World::getChunkXY(Vector2 position) {
     return chunkXY;
 }
 
-void World::drawChunks(Vector2 camTopLeft, Vector2 screenSize) {
+void World::drawChunks(Vector2 camTopLeft, Vector2 screenSize, int layer) {
     int chunkSize = 32 * 16 * 4;
 
     Vector2 startChunk = getChunkXY(camTopLeft);
@@ -57,7 +57,8 @@ void World::drawChunks(Vector2 camTopLeft, Vector2 screenSize) {
             }
 
             Vector2 chunkPos = {i * chunkSize, j * chunkSize};
-            _tilemap->draw(_tilesetTexture, chunkPos, camTopLeft, screenSize);
+            _tilemap->drawLayer(_tilesetTexture, chunkPos, camTopLeft,
+                                screenSize, layer);
         }
     }
 }

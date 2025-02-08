@@ -16,10 +16,9 @@
 class Tilemap {
 public:
     bool loadFromFile(const std::string& filename);
-    void draw(Texture2D tileset, Vector2 position = {0, 0});
-    void draw(Texture2D tileset, Vector2 chunkPos, Vector2 camTopLeft,
-              Vector2 screenSize);
-
+    void drawLayer(Texture2D tileset, Vector2 chunkPos, Vector2 camTopLeft,
+                    Vector2 screenSize, int layer);
+    void loadMap(const char* name, const char* csvData);
     void drawWall(Vector2 position = {0, 0});
 
     Rectangle getCollisions(Rectangle player, Vector2 position = {0, 0});
@@ -32,6 +31,7 @@ private:
     std::vector<int> layer1;
     std::vector<int> layer2;
     std::vector<int> wallLayer;
+    std::vector<int> spawnLayer;
 };
 
 #endif  // TILEMAP_H

@@ -59,6 +59,10 @@ private:
     float _drivingTimer = 0.0f;
 
     Vector2 _winPosition;
+
+    Shader _heartBeatShader;
+    int _resolutionLoc;
+    int _timeLoc;
 };
 
 #endif  // GAME_H
