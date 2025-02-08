@@ -107,6 +107,10 @@ void drawGrid(int screenWidth, int screenHeight, Camera2D camera) {
         DrawLine(camera.target.x - screenWidth / 2, y - 5,
                  camera.target.x + screenWidth / 2, y - 5, gridColor);
     }
+}
+
+void drawCameraTarget(Camera2D camera) {
+    Vector2 cameraTarget = camera.target;
 
     float horizontalOffset = 500;
     float verticalOffset = 225;
@@ -131,9 +135,15 @@ void Game::draw() {
     BeginMode2D(_camera);
 
     drawGrid(_screenWidth, _screenHeight, _camera);
-    _world->drawChunk({0, 0});
+    _world->drawChunks(_camera.target - _camera.offset,
+                       (Vector2){(float)_screenWidth, (float)_screenHeight});
+    _world->drawChunks(_camera.target - _camera.offset + (Vector2){200, 200},
+                       (Vector2){(float)_screenWidth, (float)_screenHeight} -
+                           (Vector2){400, 400});
 
     _player->draw();
+
+    drawCameraTarget(_camera);
 
     EndMode2D();
     EndDrawing();

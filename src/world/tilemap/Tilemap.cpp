@@ -92,7 +92,7 @@ bool Tilemap::loadFromFile(const std::string& filename) {
     return true;
 }
 
-void Tilemap::draw(Texture2D layer1et) {
+void Tilemap::draw(Texture2D layer1et, Vector2 position) {
     int ratio = 4;
 
     for (int x = 0; x < width; ++x) {
@@ -107,14 +107,49 @@ void Tilemap::draw(Texture2D layer1et) {
                 Rectangle source = {sourceX, sourceY, tileWidth, tileHeight};
                 Rectangle dest = {x * tileWidth * ratio, y * tileHeight * ratio,
                                   tileWidth * ratio, tileHeight * ratio};
-
+                dest = {dest.x + position.x, dest.y + position.y, dest.width,
+                        dest.height};
                 DrawTexturePro(layer1et, source, dest, {0, 0}, 0, WHITE);
             }
         }
     }
 }
 
-void Tilemap::drawWall() {
+void Tilemap::draw(Texture2D tileset, Vector2 chunkPos, Vector2 camTopLeft,
+                   Vector2 screenSize) {
+    int ratio = 4;
+
+    int startX =
+        std::max(0, (int)((camTopLeft.x - chunkPos.x) / (tileWidth * ratio)));
+    int endX =
+        std::min(width, (int)((camTopLeft.x + screenSize.x - chunkPos.x) /
+                              (tileWidth * ratio)) +
+                            1);
+    int startY =
+        std::max(0, (int)((camTopLeft.y - chunkPos.y) / (tileHeight * ratio)));
+    int endY =
+        std::min(height, (int)((camTopLeft.y + screenSize.y - chunkPos.y) /
+                               (tileHeight * ratio)) +
+                             1);
+
+    for (int y = startY; y < endY; ++y) {
+        for (int x = startX; x < endX; ++x) {
+            int tileIndex = layer1[y * width + x];
+            if (tileIndex > 0) {
+                int tileX = (tileIndex - 1) % (tileset.width / tileWidth);
+                int tileY = (tileIndex - 1) / (tileset.width / tileWidth);
+                Rectangle source = {tileX * tileWidth, tileY * tileHeight,
+                                    tileWidth, tileHeight};
+                Rectangle dest = {chunkPos.x + x * tileWidth * ratio,
+                                  chunkPos.y + y * tileHeight * ratio,
+                                  tileWidth * ratio, tileHeight * ratio};
+                DrawTexturePro(tileset, source, dest, {0, 0}, 0.0f, WHITE);
+            }
+        }
+    }
+}
+
+void Tilemap::drawWall(Vector2 position) {
     int ratio = 4;
     Color color = {255, 0, 0, 255};
 
@@ -127,30 +162,42 @@ void Tilemap::drawWall() {
 
                 Rectangle dest = {x * tileWidth * ratio, y * tileHeight * ratio,
                                   tileWidth * ratio, tileHeight * ratio};
-
+                dest = {dest.x + position.x, dest.y + position.y, dest.width,
+                        dest.height};
                 DrawRectangleRec(dest, color);
             }
         }
     }
 }
 
-Rectangle Tilemap::getCollisions(Rectangle player) {
+Rectangle Tilemap::getCollisions(Rectangle player, Vector2 position) {
     int ratio = 4;
 
-    for (int x = 0; x < width; ++x) {
-        for (int y = 0; y < height; ++y) {
+    int startX =
+        std::max(0, (int)((player.x - position.x) / (tileWidth * ratio)));
+    int endX = std::min(width, (int)((player.x + player.width - position.x) /
+                                     (tileWidth * ratio)) +
+                                   1);
+    int startY =
+        std::max(0, (int)((player.y - position.y) / (tileHeight * ratio)));
+    int endY = std::min(height, (int)((player.y + player.height - position.y) /
+                                      (tileHeight * ratio)) +
+                                    1);
+
+    for (int y = startY; y < endY; ++y) {
+        for (int x = startX; x < endX; ++x) {
             int tileIndex = wallLayer[y * width + x];
             if (tileIndex > 0) {
-                Rectangle tile = {x * tileWidth * ratio, y * tileHeight * ratio,
-                                  tileWidth * ratio, tileHeight * ratio};
-
-                if (CheckCollisionRecs(player, tile)) {
-                    Rectangle collision = GetCollisionRec(player, tile);
-                    return collision;
+                Rectangle tileRect = {x * tileWidth * ratio,
+                                      y * tileHeight * ratio, tileWidth * ratio,
+                                      tileHeight * ratio};
+                tileRect = {tileRect.x + position.x, tileRect.y + position.y,
+                            tileRect.width, tileRect.height};
+                if (CheckCollisionRecs(player, tileRect)) {
+                    return tileRect;
                 }
             }
         }
     }
-
     return {0, 0, 0, 0};
 }

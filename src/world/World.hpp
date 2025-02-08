@@ -37,9 +37,11 @@ public:
     World();
     ~World();
 
-    void drawChunk(Vector2 position);
+    void drawChunks(Vector2 camTopLeft, Vector2 screenSize);
 
     Rectangle getCollisions(Rectangle player);
+
+    Vector2 getChunkXY(Vector2 position);
 
 private:
     Image _tileset;
