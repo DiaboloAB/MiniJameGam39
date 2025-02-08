@@ -17,6 +17,7 @@ Game::Game(int screenWidth, int screenHeight)
     _lastTime = std::chrono::high_resolution_clock::now();
 
     _player = std::make_unique<Player>();
+    _car = std::make_unique<Car>();
     _world = std::make_unique<World>();
     _hud = std::make_unique<HUD>();
     _entityManager = std::make_unique<EntityManager>();
@@ -76,6 +77,21 @@ void Game::update(float deltaTime) {
             _player->setPosition(newPosition);
         }
     }
+
+    if (IsKeyDown(KEY_W)) {
+        _car->accelerate(100 * deltaTime);  // Accélère
+    }
+    if (IsKeyDown(KEY_S)) {
+        _car->accelerate(-100 * deltaTime); // Freine
+    }
+    if (IsKeyDown(KEY_A)) {
+        _car->turn(-120 * deltaTime); // Tourne à gauche
+    }
+    if (IsKeyDown(KEY_D)) {
+        _car->turn(120 * deltaTime); // Tourne à droite
+    }
+
+    _car->update(deltaTime);
     _hud->update(deltaTime, _player->getPanic(), _player->getBonus());
     followPlayer();
 
@@ -141,6 +157,7 @@ void Game::draw() {
                            (Vector2){400, 400});
 
     _player->draw();
+    _car->draw();
     _entityManager->draw();
 
     // drawCameraTarget(_camera);

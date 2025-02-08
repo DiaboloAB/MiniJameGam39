@@ -10,6 +10,7 @@
 #include "groupies/EntityManager.hpp"
 #include "player/Player.hpp"
 #include "world/World.hpp"
+#include "player/Car.hpp"
 #include "HUD.hpp"
 
 // std
@@ -38,6 +39,7 @@ private:
     Camera2D _camera;
 
     std::unique_ptr<Player> _player;
+    std::unique_ptr<Car> _car;
 
     std::unique_ptr<World> _world;
 
