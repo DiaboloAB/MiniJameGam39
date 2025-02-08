@@ -16,15 +16,18 @@
 #include <chrono>
 #include <memory>
 
+enum class SceneType;
+
+
 class Game {
 public:
-    Game(int screenWidth = 800, int screenHeight = 450);
+    Game(int screenWidth = 1920, int screenHeight = 1080);
     ~Game();
 
     void initCamera();
     void followPlayer();
 
-    void run();
+    SceneType run();
     void update(float deltaTime);
     void draw();
 

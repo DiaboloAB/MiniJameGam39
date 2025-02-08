@@ -8,13 +8,13 @@
 #ifndef MENU_HPP_
 #define MENU_HPP_
 
+enum class SceneType;
+
 class Menu {
     public:
         Menu();
         ~Menu();
-        int paralax(int screenWidth, int screenHeight);
-    protected:
-    private:
+        SceneType paralax(int screenWidth, int screenHeight);
 };
 
 #endif /* !MENU_HPP_ */

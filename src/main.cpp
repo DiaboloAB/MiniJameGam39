@@ -9,13 +9,13 @@
 #include "./Pathfinding/pathfinding.hpp"
 #include <iostream>
 #include "./menu/Menu.hpp"
+#include "./scene/Scene.hpp"
+
 
 int main() {
-    Game game = Game(1920, 1080);
-    Menu menu;
-    InitAudioDevice();
-    //menu.paralax(1920, 1080);
-    game.run();
+    SceneManager scene  = SceneManager(1920,1080);
+    scene.run();
+
 
 
     // AStar::Generator generator;

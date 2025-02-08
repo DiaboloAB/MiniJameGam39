@@ -7,11 +7,10 @@
 #include "Game.hpp"
 #include "raylib.h"
 #include "raymath.h"
+#include "./scene/Scene.hpp"
 
 Game::Game(int screenWidth, int screenHeight)
     : _screenWidth(screenWidth), _screenHeight(screenHeight) {
-    InitWindow(screenWidth, screenHeight, "Brad Pitt Simulator");
-    SetTargetFPS(60);
     // SetTraceLogLevel(LOG_NONE);
 
     _lastTime = std::chrono::high_resolution_clock::now();
@@ -24,10 +23,9 @@ Game::Game(int screenWidth, int screenHeight)
 }
 
 Game::~Game() {
-    CloseWindow();
 }
 
-void Game::run() {
+SceneType Game::run() {
     while (!WindowShouldClose()) {
         auto currentTime = std::chrono::high_resolution_clock::now();
         std::chrono::duration<float> elapsedTime = currentTime - _lastTime;
@@ -37,6 +35,7 @@ void Game::run() {
         update(_deltaTime);
         draw();
     }
+    return SceneType::GAME;
 }
 
 void Game::update(float deltaTime) {

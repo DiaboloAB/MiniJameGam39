@@ -71,3 +71,7 @@ Button::~Button()
     UnloadTexture(button);
     UnloadSound(fxButton);
 }
+
+bool Button::IsClicked() {
+    return btnAction;
+}
