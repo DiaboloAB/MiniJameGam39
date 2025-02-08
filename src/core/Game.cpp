@@ -29,6 +29,9 @@ Game::Game(int screenWidth, int screenHeight)
     _arrow = LoadTextureFromImage(arrow);
     Image drop = LoadImage("assets/drop.png");
     _drop = LoadTextureFromImage(drop);
+
+    Image imagePlane = LoadImage("assets/plane.png");
+    _plane = LoadTextureFromImage(imagePlane);
 }
 
 Game::~Game() {
@@ -86,12 +89,14 @@ void Game::update(float deltaTime) {
     }
     _hud->update(deltaTime, _player->getPanic(), _player->getBonus());
     followPlayer();
-
     _spawnTimer += deltaTime;
     if (_spawnTimer > 3) {
         _entityManager->spawnEntity(_player->getPosition());
         _spawnTimer = 0;
     }
+    _plane_x += 2.8;
+    _plane_y += -2;
+
     _entityManager->update(deltaTime, _player.get(), _world.get());
 }
 
@@ -156,7 +161,7 @@ void Game::draw() {
     drawArrow();
 
     EndMode2D();
-
+    isOnDrop();
     _hud->draw();
     EndDrawing();
 }
@@ -189,4 +194,31 @@ void Game::drawDrop() {
                    (Rectangle){0, 0, (float)_drop.width, (float)_drop.height},
                    (Rectangle){_winPosition.x, _winPosition.y, 100, 100},
                    (Vector2){50, 50}, 0, WHITE);
+}
+
+
+
+void updatePlane(float deltaTime, int frames)
+{
+}
+void Game::isOnDrop()
+{
+
+    float distance = Vector2Length(Vector2Subtract(_winPosition, _player->getPosition()));
+    Vector2 direction = {cos(45), sin(45)};
+    Vector2 playerPosition = _player->getPosition();
+    std::cout << "OKEYYYYYYYYYYYYYYYY" << std::endl;
+
+
+    if (distance < 30) {
+            DrawTexturePro(_plane, (Rectangle){0, 0, _plane.width, _plane.height},
+            (Rectangle){_plane_x - 600, _plane_y + 1400, 800, 800},
+            (Vector2){0, 0}, 65, WHITE);
+            _inDrop = true;
+    } else {
+        _inDrop = false;
+    }
+    if (_inDrop == true && (_plane_x + 100 > playerPosition.x && _plane_x - 100 < playerPosition.x) && (_plane_y + 100 > playerPosition.y && _plane_y - 100 < playerPosition.y)) {
+        _player->setPosition((Vector2){_plane_x + 80, _plane_y + 80});
+    }
 }

@@ -38,7 +38,6 @@ public:
                     break;
                 case SceneType::GAME:
                     std::cout << "COOOL GAME" << std::endl;
-
                     runGame();
                     break;
                 case SceneType::EXIT:

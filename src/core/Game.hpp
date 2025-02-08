@@ -31,6 +31,7 @@ public:
     void draw();
     void drawArrow();
     void drawDrop();
+    void isOnDrop();
 
 private:
     float _deltaTime;
@@ -53,6 +54,11 @@ private:
     float _spawnTimer;
 
     Vector2 _winPosition;
+
+    Texture2D _plane;
+    float _plane_x = 0.0f;
+    float _plane_y = 0.0f;
+    bool _inDrop = false;
 };
 
 #endif  // GAME_H
