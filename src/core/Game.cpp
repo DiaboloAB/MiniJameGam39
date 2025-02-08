@@ -10,14 +10,16 @@
 
 Game::Game(int screenWidth, int screenHeight)
     : _screenWidth(screenWidth), _screenHeight(screenHeight) {
-    InitWindow(screenWidth, screenHeight,
-               "raylib [core] example - basic window");
+    InitWindow(screenWidth, screenHeight, "Brad Pitt Simulator");
     SetTargetFPS(60);
-    SetTraceLogLevel(LOG_NONE);
+    // SetTraceLogLevel(LOG_NONE);
 
     _lastTime = std::chrono::high_resolution_clock::now();
 
-    _player = Player();
+    _player = std::make_unique<Player>();
+    _world = std::make_unique<World>();
+    _entityManager = std::make_unique<EntityManager>();
+
     initCamera();
 }
 
@@ -44,37 +46,71 @@ void Game::update(float deltaTime) {
     direction.x = IsKeyDown(KEY_RIGHT) - IsKeyDown(KEY_LEFT);
     direction.y = IsKeyDown(KEY_DOWN) - IsKeyDown(KEY_UP);
 
-    Vector2 normalizedDirection = Vector2Normalize(direction);
-    direction = Vector2Scale(normalizedDirection, speed);
+    if (Vector2Length(direction) > 0) {
+        direction = Vector2Normalize(direction);
+        direction = Vector2Scale(direction, speed);
 
-    _player.move(direction);
+        _player->move(direction);
+        _player->update(deltaTime);
+        Vector2 newPosition = _player->getPosition();
+        newPosition.x += direction.x;
+        _player->setPosition(newPosition);
+
+        Rectangle playerBoundingBox = _player->getBoundingBox();
+        Rectangle collision = _world->getCollisions(playerBoundingBox);
+
+        if (collision.width != 0 && collision.height != 0) {
+            newPosition.x -= direction.x;
+            _player->setPosition(newPosition);
+        }
+
+        newPosition = _player->getPosition();
+        newPosition.y += direction.y;
+        _player->setPosition(newPosition);
+
+        playerBoundingBox = _player->getBoundingBox();
+        collision = _world->getCollisions(playerBoundingBox);
+
+        if (collision.width != 0 && collision.height != 0) {
+            newPosition.y -= direction.y;
+            _player->setPosition(newPosition);
+        }
+    }
     followPlayer();
 
-    (void)deltaTime;
+    // _spawnTimer += deltaTime;
+    // if (_spawnTimer > 3) {
+    //     _entityManager->spawnEntity(_player->getPosition());
+    //     _spawnTimer = 0;
+    // }
 }
 
 void drawGrid(int screenWidth, int screenHeight, Camera2D camera) {
-    const int gridSpacing = 20;
+    const int gridSpacing = 32;
     const Color gridColor = LIGHTGRAY;
 
     Vector2 cameraTarget = camera.target;
 
-    for (int x = camera.target.x - (int)camera.target.x % gridSpacing -
-                 screenWidth / 2;
+    for (float x = camera.target.x - (int)camera.target.x % gridSpacing -
+                   screenWidth / 2;
          x < camera.target.x + screenWidth / 2; x += gridSpacing) {
         DrawLine(x, camera.target.y - screenHeight / 2, x,
                  camera.target.y + screenHeight / 2, gridColor);
     }
 
-    for (int y = camera.target.y - (int)camera.target.y % gridSpacing -
-                 screenHeight / 2;
+    for (float y = camera.target.y - (int)camera.target.y % gridSpacing -
+                   screenHeight / 2;
          y < camera.target.y + screenHeight / 2; y += gridSpacing) {
-        DrawLine(camera.target.x - screenWidth / 2, y,
-                 camera.target.x + screenWidth / 2, y, gridColor);
+        DrawLine(camera.target.x - screenWidth / 2, y - 5,
+                 camera.target.x + screenWidth / 2, y - 5, gridColor);
     }
+}
 
-    float horizontalOffset = 600;
-    float verticalOffset = 275;
+void drawCameraTarget(Camera2D camera) {
+    Vector2 cameraTarget = camera.target;
+
+    float horizontalOffset = 500;
+    float verticalOffset = 225;
 
     DrawLine(cameraTarget.x - horizontalOffset, cameraTarget.y - verticalOffset,
              cameraTarget.x + horizontalOffset, cameraTarget.y - verticalOffset,
@@ -96,7 +132,16 @@ void Game::draw() {
     BeginMode2D(_camera);
 
     drawGrid(_screenWidth, _screenHeight, _camera);
-    _player.draw();
+    _world->drawChunks(_camera.target - _camera.offset,
+                       (Vector2){(float)_screenWidth, (float)_screenHeight});
+    _world->drawChunks(_camera.target - _camera.offset + (Vector2){200, 200},
+                       (Vector2){(float)_screenWidth, (float)_screenHeight} -
+                           (Vector2){400, 400});
+
+    _player->draw();
+    _entityManager->draw();
+
+    drawCameraTarget(_camera);
 
     EndMode2D();
     EndDrawing();

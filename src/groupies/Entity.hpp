@@ -4,19 +4,18 @@
  * Date, Location: 2025, Rennes
  **********************************************************************************/
 
-#ifndef PLAYER_H
-#define PLAYER_H
+#ifndef ENTITY_H
+#define ENTITY_H
 
-// std
 #include <iostream>
 
 #include "../core/Animation.hpp"
 #include "raylib.h"
 
-class Player {
+class Entity {
 public:
-    Player();
-    ~Player();
+    Entity();
+    ~Entity();
 
     void move(Vector2 direction);
     Vector2 getPosition() {
@@ -39,4 +38,4 @@ private:
     bool _isMoving;
 };
 
-#endif  // PLAYER_H
+#endif  // ENTITY_H

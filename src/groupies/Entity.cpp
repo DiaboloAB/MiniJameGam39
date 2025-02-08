@@ -4,24 +4,24 @@
  * Date, Location: 2025, Rennes
  **********************************************************************************/
 
-#include "Player.hpp"
+#include "Entity.hpp"
 
-Player::Player() {
+Entity::Entity() {
     _position = {0, 0};
-    Texture2D texture = LoadTexture("assets/player.png");
-    if (texture.id == 0) {
-        throw std::runtime_error("Failed to load player texture");
-    }
-    _animation =
-        new Animation(texture, texture.width / 4, texture.height / 3, 0.1f);
+    // Texture2D texture = LoadTexture("assets/fan1.png");
+    // if (texture.id == 0) {
+    //     throw std::runtime_error("Failed to load Entity texture");
+    // }
+    // _animation =
+    //     new Animation(texture, texture.width / 4, texture.height / 3, 0.1f);
     _direction = 0;
 }
 
-Player::~Player() {
+Entity::~Entity() {
     delete _animation;
 }
 
-void Player::move(Vector2 direction) {
+void Entity::move(Vector2 direction) {
     _isMoving = (direction.x != 0 || direction.y != 0);
 
     // _position.x += direction.x;
@@ -38,7 +38,7 @@ void Player::move(Vector2 direction) {
     }
 }
 
-void Player::update(float deltaTime) {
+void Entity::update(float deltaTime) {
     if (_isMoving) {
         _animation->update(deltaTime, 3);
     } else {
@@ -46,10 +46,10 @@ void Player::update(float deltaTime) {
     }
 }
 
-void Player::draw() {
-    _animation->draw(_position, _direction, 4.0f);
+void Entity::draw() {
+    // _animation->draw(_position, _direction, 4.0f);
 }
 
-Rectangle Player::getBoundingBox() {
+Rectangle Entity::getBoundingBox() {
     return {_position.x - 25, _position.y - 25, 50, 50};
 }
