@@ -12,6 +12,7 @@
 
 // std
 #include <chrono>
+#include <memory>
 
 class Game {
 public:
@@ -34,9 +35,9 @@ private:
 
     Camera2D _camera;
 
-    Player* _player;
+    std::unique_ptr<Player> _player;
 
-    World _world;
+    std::unique_ptr<World> _world;
 };
 
 #endif  // GAME_H

@@ -12,7 +12,8 @@ Player::Player() {
     if (texture.id == 0) {
         throw std::runtime_error("Failed to load player texture");
     }
-    _animation = new Animation(texture, texture.width / 4, texture.height / 3, 0.1f);
+    _animation =
+        new Animation(texture, texture.width / 4, texture.height / 3, 0.1f);
     _direction = 0;
 }
 
@@ -23,17 +24,17 @@ Player::~Player() {
 void Player::move(Vector2 direction) {
     _isMoving = (direction.x != 0 || direction.y != 0);
 
-    _position.x += direction.x;
-    _position.y += direction.y;
+    // _position.x += direction.x;
+    // _position.y += direction.y;
 
     if (direction.x > 0) {
-        _direction = 3; // Right
+        _direction = 3;  // Right
     } else if (direction.x < 0) {
-        _direction = 0; // Left
+        _direction = 0;  // Left
     } else if (direction.y > 0) {
-        _direction = 1; // Down
+        _direction = 1;  // Down
     } else if (direction.y < 0) {
-        _direction = 2; // Up
+        _direction = 2;  // Up
     }
 }
 
@@ -47,4 +48,8 @@ void Player::update(float deltaTime) {
 
 void Player::draw() {
     _animation->draw(_position, _direction, 2.0f);
+}
+
+Rectangle Player::getBoundingBox() {
+    return {_position.x - 25, _position.y - 25, 50, 50};
 }

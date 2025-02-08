@@ -6,7 +6,8 @@
 
 #include "Animation.hpp"
 
-Animation::Animation(Texture2D texture, int frameWidth, int frameHeight, float frameTime) {
+Animation::Animation(Texture2D texture, int frameWidth, int frameHeight,
+                     float frameTime) {
     _texture = texture;
     _frameWidth = frameWidth;
     _frameHeight = frameHeight;
@@ -16,7 +17,8 @@ Animation::Animation(Texture2D texture, int frameWidth, int frameHeight, float f
 }
 
 Animation::~Animation() {
-    UnloadTexture(_texture);
+    // cause a segfault ????
+    // UnloadTexture(_texture);
 }
 
 void Animation::update(float deltaTime, int frames) {
@@ -28,19 +30,14 @@ void Animation::update(float deltaTime, int frames) {
 }
 
 void Animation::draw(Vector2 position, int direction, float scale) {
-    Rectangle source = {
-        static_cast<float>(direction * _frameWidth),
-        static_cast<float>(_currentFrame * _frameHeight),
-        static_cast<float>(_frameWidth),
-        static_cast<float>(_frameHeight)
-    };
+    Rectangle source = {static_cast<float>(direction * _frameWidth),
+                        static_cast<float>(_currentFrame * _frameHeight),
+                        static_cast<float>(_frameWidth),
+                        static_cast<float>(_frameHeight)};
 
-    Rectangle dest = {
-        position.x,
-        position.y,
-        static_cast<float>(_frameWidth) * scale,
-        static_cast<float>(_frameHeight) * scale
-    };
+    Rectangle dest = {position.x, position.y,
+                      static_cast<float>(_frameWidth) * scale,
+                      static_cast<float>(_frameHeight) * scale};
 
     DrawTexturePro(_texture, source, dest, {0, 0}, 0, WHITE);
 }

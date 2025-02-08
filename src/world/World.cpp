@@ -8,19 +8,20 @@
 #include "raylib.h"
 
 World::World() {
-    _chunks = std::unordered_map<std::pair<int, int>, Chunk,
-                                 std::hash<std::pair<int, int>>, PairEqual>();
-    for (int i = -2; i < 2; i++) {
-        for (int j = -2; j < 2; j++) {
-            auto chunkCoords = std::make_pair(i, j);
-            _chunks[chunkCoords].generate();
-        }
-    }
+    // _chunks = std::unordered_map<std::pair<int, int>, Chunk,
+    //                              std::hash<std::pair<int, int>>,
+    //                              PairEqual>();
+    // for (int i = -2; i < 2; i++) {
+    //     for (int j = -2; j < 2; j++) {
+    //         auto chunkCoords = std::make_pair(i, j);
+    //         _chunks[chunkCoords].generate();
+    //     }
+    // }
 
-    // _tileset = LoadImage("assets/tileset.png");
-    // ImageResize(&_tileset, 32 * 128, 32 * 128);
-
-    // _doc.LoadFile("assets/tilemap/tilemap.tmx");
+    _tileset = LoadImage("assets/tilemap.png");
+    _tilesetTexture = LoadTextureFromImage(_tileset);
+    _tilemap = std::make_unique<Tilemap>();
+    _tilemap->loadFromFile("assets/tilemap/untitled.tmx");
 }
 
 World::~World() {
@@ -28,8 +29,10 @@ World::~World() {
 }
 
 void World::drawChunk(Vector2 position) {
-    auto chunkCoords = std::make_pair((int)position.x, (int)position.y);
+    _tilemap->draw(_tilesetTexture);
+    _tilemap->drawWall();
+}
 
-    _chunks[chunkCoords].draw(Vector2{position.x * Chunk::SIZE * 32 * 128,
-                                      position.y * Chunk::SIZE * 32 * 128});
+Rectangle World::getCollisions(Rectangle player) {
+    return _tilemap->getCollisions(player);
 }

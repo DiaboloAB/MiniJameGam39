@@ -8,9 +8,10 @@
 #define PLAYER_H
 
 // std
-#include "raylib.h"
 #include <iostream>
+
 #include "../core/Animation.hpp"
+#include "raylib.h"
 
 class Player {
 public:
@@ -21,13 +22,20 @@ public:
     Vector2 getPosition() {
         return _position;
     }
+
+    void setPosition(Vector2 position) {
+        _position = position;
+    }
     void update(float deltaTime);
+
+    Rectangle getBoundingBox();
+
     void draw();
 
 private:
     Vector2 _position;
     Animation* _animation;
-    int _direction; // 0: Left, 1: Down, 2: Up, 3: Right
+    int _direction;  // 0: Left, 1: Down, 2: Up, 3: Right
     bool _isMoving;
 };
 

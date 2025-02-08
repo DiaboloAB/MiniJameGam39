@@ -10,15 +10,15 @@
 
 Game::Game(int screenWidth, int screenHeight)
     : _screenWidth(screenWidth), _screenHeight(screenHeight) {
-    InitWindow(screenWidth, screenHeight,
-               "raylib [core] example - basic window");
+    InitWindow(screenWidth, screenHeight, "Brad Pitt Simulator");
     SetTargetFPS(60);
     // SetTraceLogLevel(LOG_NONE);
 
     _lastTime = std::chrono::high_resolution_clock::now();
 
-    _player = new Player();
-    _world = World();
+    _player = std::make_unique<Player>();
+    _world = std::make_unique<World>();
+
     initCamera();
 }
 
@@ -45,11 +45,44 @@ void Game::update(float deltaTime) {
     direction.x = IsKeyDown(KEY_RIGHT) - IsKeyDown(KEY_LEFT);
     direction.y = IsKeyDown(KEY_DOWN) - IsKeyDown(KEY_UP);
 
-    Vector2 normalizedDirection = Vector2Normalize(direction);
-    direction = Vector2Scale(normalizedDirection, speed);
+    if (Vector2Length(direction) > 0) {
+        direction = Vector2Normalize(direction);
+        direction = Vector2Scale(direction, speed);
 
-    _player->move(direction);
-    _player->update(deltaTime);
+        _player->move(direction);
+        _player->update(deltaTime);
+        // Move the player on the X axis
+        Vector2 newPosition = _player->getPosition();
+        newPosition.x += direction.x;
+        _player->setPosition(newPosition);
+
+        // Check for collisions on the X axis
+        Rectangle playerBoundingBox = _player->getBoundingBox();
+        Rectangle collision = _world->getCollisions(playerBoundingBox);
+
+        // If a collision is detected, adjust the player's position on the X
+        // axis
+        if (collision.width != 0 && collision.height != 0) {
+            newPosition.x -= direction.x;
+            _player->setPosition(newPosition);
+        }
+
+        // Move the player on the Y axis
+        newPosition = _player->getPosition();
+        newPosition.y += direction.y;
+        _player->setPosition(newPosition);
+
+        // Check for collisions on the Y axis
+        playerBoundingBox = _player->getBoundingBox();
+        collision = _world->getCollisions(playerBoundingBox);
+
+        // If a collision is detected, adjust the player's position on the Y
+        // axis
+        if (collision.width != 0 && collision.height != 0) {
+            newPosition.y -= direction.y;
+            _player->setPosition(newPosition);
+        }
+    }
     followPlayer();
 
     (void)deltaTime;
@@ -97,8 +130,9 @@ void Game::draw() {
     ClearBackground(RAYWHITE);
     BeginMode2D(_camera);
 
-    _world.drawChunk({0, 0});
     drawGrid(_screenWidth, _screenHeight, _camera);
+    _world->drawChunk({0, 0});
+
     _player->draw();
 
     EndMode2D();
