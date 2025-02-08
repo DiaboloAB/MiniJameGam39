@@ -8,7 +8,9 @@
 
 Entity::Entity() {
     _position = {0, 0};
-    Texture2D texture = LoadTexture("assets/fan1.png");
+    int random = GetRandomValue(1, 5);
+    Texture2D texture =
+        LoadTexture(("assets/fan" + std::to_string(random) + ".png").c_str());
     if (texture.id == 0) {
         throw std::runtime_error("Failed to load Entity texture");
     }

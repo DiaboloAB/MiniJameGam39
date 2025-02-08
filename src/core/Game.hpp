@@ -7,17 +7,16 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "HUD.hpp"
 #include "groupies/EntityManager.hpp"
 #include "player/Player.hpp"
 #include "world/World.hpp"
-#include "HUD.hpp"
 
 // std
 #include <chrono>
 #include <memory>
 
 enum class SceneType;
-
 
 class Game {
 public:
@@ -30,6 +29,8 @@ public:
     SceneType run();
     void update(float deltaTime);
     void draw();
+    void drawArrow();
+    void drawDrop();
 
 private:
     float _deltaTime;
@@ -46,8 +47,12 @@ private:
 
     std::unique_ptr<HUD> _hud;
     std::unique_ptr<EntityManager> _entityManager;
+    Texture2D _arrow;
+    Texture2D _drop;
 
     float _spawnTimer;
+
+    Vector2 _winPosition;
 };
 
 #endif  // GAME_H
