@@ -7,7 +7,6 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#include "Chunk.hpp"
 #include "raylib.h"
 #include "tinyxml2.h"
 #include "world/tilemap/Tilemap.hpp"
@@ -17,21 +16,21 @@
 #include <unordered_map>
 #include <vector>
 
-// namespace std {
-// template <>
-// struct hash<std::pair<int, int>> {
-//     std::size_t operator()(const std::pair<int, int>& p) const noexcept {
-//         return std::hash<int>()(p.first) ^ (std::hash<int>()(p.second) << 1);
-//     }
-// };
-// }  // namespace std
+namespace std {
+template <>
+struct hash<std::pair<int, int>> {
+    std::size_t operator()(const std::pair<int, int>& p) const noexcept {
+        return std::hash<int>()(p.first) ^ (std::hash<int>()(p.second) << 1);
+    }
+};
+}  // namespace std
 
-// struct PairEqual {
-//     bool operator()(const std::pair<int, int>& lhs,
-//                     const std::pair<int, int>& rhs) const {
-//         return lhs.first == rhs.first && lhs.second == rhs.second;
-//     }
-// };
+struct PairEqual {
+    bool operator()(const std::pair<int, int>& lhs,
+                    const std::pair<int, int>& rhs) const {
+        return lhs.first == rhs.first && lhs.second == rhs.second;
+    }
+};
 
 class World {
 public:
@@ -47,9 +46,9 @@ private:
     Texture2D _tilesetTexture;
     std::unique_ptr<Tilemap> _tilemap;
 
-    // std::unordered_map<std::pair<int, int>, Chunk,
-    //                    std::hash<std::pair<int, int>>, PairEqual>
-    //     _chunks;
+    std::unordered_map<std::pair<int, int>, int, std::hash<std::pair<int, int>>,
+                       PairEqual>
+        _chunks;
 };
 
 #endif  // WORLD_H

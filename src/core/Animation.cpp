@@ -35,7 +35,8 @@ void Animation::draw(Vector2 position, int direction, float scale) {
                         static_cast<float>(_frameWidth),
                         static_cast<float>(_frameHeight)};
 
-    Rectangle dest = {position.x, position.y,
+    Rectangle dest = {position.x - static_cast<float>(_frameWidth) * scale / 2,
+                      position.y - static_cast<float>(_frameHeight) * scale / 2,
                       static_cast<float>(_frameWidth) * scale,
                       static_cast<float>(_frameHeight) * scale};
 

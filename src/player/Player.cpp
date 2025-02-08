@@ -47,7 +47,7 @@ void Player::update(float deltaTime) {
 }
 
 void Player::draw() {
-    _animation->draw(_position, _direction, 2.0f);
+    _animation->draw(_position, _direction, 4.0f);
 }
 
 Rectangle Player::getBoundingBox() {
