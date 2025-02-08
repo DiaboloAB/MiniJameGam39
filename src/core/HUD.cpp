@@ -12,6 +12,7 @@ HUD::HUD() {
     _panicBarTexture = LoadTexture("assets/heart.png");
     _bonusTexture = LoadTexture("assets/bonus.png");
     _timeTexture = LoadTexture("assets/clock.png");
+    _panel = LoadTexture("assets/hud-panel.png");
     _panicCount = 1;
     _bonusCount = 0;
     _elapsedTime = 0.0f;
@@ -36,6 +37,8 @@ void HUD::draw() {
     int iconSize = 32; // Taille des icônes
     int textOffsetX = iconSize + 10; // Décalage entre l'icône et le texte
     int hudY = 20; // Hauteur uniforme
+
+    DrawTextureEx(_panel, {0, 0}, 0.0f, 1.0f, WHITE);
 
     int timeX = startX;
     DrawTextureEx(_timeTexture, {static_cast<float>(timeX), static_cast<float>(hudY)}, 0.0f, 1.0f, WHITE);

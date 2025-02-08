@@ -28,6 +28,8 @@ private:
     int _bonusCount;
     Texture2D _timeTexture;
     float _elapsedTime;
+
+    Texture2D _panel;
 };
 
 #endif
