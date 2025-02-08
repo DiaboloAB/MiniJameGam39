@@ -29,6 +29,9 @@ public:
     void update(float deltaTime);
     void draw();
 
+    void handlePlayerInput(float deltaTime, Vector2 direction, float speed);
+    void handleCarInput(float deltaTime);
+
 private:
     float _deltaTime;
     std::chrono::high_resolution_clock::time_point _lastTime;
