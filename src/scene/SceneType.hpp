@@ -4,16 +4,9 @@
  * Date, Location: 2025, Rennes
  **********************************************************************************/
 
-#include <iostream>
+#ifndef SCENETYPE_H
+#define SCENETYPE_H
 
-#include "./Pathfinding/pathfinding.hpp"
-#include "./menu/Menu.hpp"
-#include "./scene/SceneManager.hpp"
-#include "core/Game.hpp"
-#include "raylib.h"
+enum class SceneType { MENU, GAME, EXIT };
 
-int main() {
-    SceneManager scene = SceneManager(1920, 1080);
-    scene.run();
-    return 0;
-}
+#endif  // SCENETYPE_H

@@ -10,6 +10,8 @@ public:
     ~Button();
 
     void Draw();
+    bool IsClicked();
+
 
 private:
     Texture2D button;

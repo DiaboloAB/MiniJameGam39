@@ -7,6 +7,7 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "HUD.hpp"
 #include "groupies/EntityManager.hpp"
 #include "player/Player.hpp"
 #include "world/World.hpp"
@@ -17,17 +18,19 @@
 #include <chrono>
 #include <memory>
 
+#include "scene/SceneType.hpp"
 class Game {
 public:
-    Game(int screenWidth = 800, int screenHeight = 450);
+    Game(int screenWidth = 1920, int screenHeight = 1080);
     ~Game();
 
     void initCamera();
     void followPlayer();
 
-    void run();
-    void update(float deltaTime);
+    SceneType update(float deltaTime);
     void draw();
+    void drawArrow();
+    void drawDrop();
 
     void handlePlayerInput(float deltaTime, Vector2 direction, float speed);
     void handleCarInput(float deltaTime);
@@ -48,10 +51,14 @@ private:
 
     std::unique_ptr<HUD> _hud;
     std::unique_ptr<EntityManager> _entityManager;
+    Texture2D _arrow;
+    Texture2D _drop;
 
     float _spawnTimer;
     bool _drivingMode = false;
     float _drivingTimer = 0.0f;
+
+    Vector2 _winPosition;
 };
 
 #endif  // GAME_H

@@ -4,14 +4,13 @@
  * Date, Location: 2025, Rennes
  **********************************************************************************/
 
+#include "./scene/SceneType.hpp"
 #include "Game.hpp"
 #include "raylib.h"
 #include "raymath.h"
 
 Game::Game(int screenWidth, int screenHeight)
     : _screenWidth(screenWidth), _screenHeight(screenHeight) {
-    InitWindow(screenWidth, screenHeight, "Brad Pitt Simulator");
-    SetTargetFPS(60);
     // SetTraceLogLevel(LOG_NONE);
 
     _lastTime = std::chrono::high_resolution_clock::now();
@@ -22,25 +21,21 @@ Game::Game(int screenWidth, int screenHeight)
     _hud = std::make_unique<HUD>();
     _entityManager = std::make_unique<EntityManager>();
     initCamera();
+
+    // get a value on a circle of radius 1000
+    // _winPosition = {1500 * cos(PI / 4), 1500 * sin(PI / 4)};
+    _winPosition = {1000, 0};
+
+    Image arrow = LoadImage("assets/arrow.png");
+    _arrow = LoadTextureFromImage(arrow);
+    Image drop = LoadImage("assets/drop.png");
+    _drop = LoadTextureFromImage(drop);
 }
 
 Game::~Game() {
-    CloseWindow();
 }
 
-void Game::run() {
-    while (!WindowShouldClose()) {
-        auto currentTime = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<float> elapsedTime = currentTime - _lastTime;
-        _deltaTime = elapsedTime.count();
-        _lastTime = currentTime;
-
-        update(_deltaTime);
-        draw();
-    }
-}
-
-void Game::update(float deltaTime) {
+SceneType Game::update(float deltaTime) {
     Vector2 direction = {0, 0};
     float speed = 500 * deltaTime;
 
@@ -64,6 +59,7 @@ void Game::update(float deltaTime) {
         _spawnTimer = 0;
     }
     _entityManager->update(deltaTime, _player.get(), _world.get());
+    return SceneType::GAME;
 }
 
 void drawGrid(int screenWidth, int screenHeight, Camera2D camera) {
@@ -108,8 +104,6 @@ void drawCameraTarget(Camera2D camera) {
 }
 
 void Game::draw() {
-    BeginDrawing();
-    ClearBackground(RAYWHITE);
     BeginMode2D(_camera);
 
     drawGrid(_screenWidth, _screenHeight, _camera);
@@ -127,14 +121,15 @@ void Game::draw() {
             _car->draw();
         }
     }
+    drawDrop();
     _entityManager->draw();
 
     // drawCameraTarget(_camera);
+    drawArrow();
 
     EndMode2D();
 
     _hud->draw();
-    EndDrawing();
 }
 
 void Game::handlePlayerInput(float deltaTime, Vector2 direction, float speed) {
@@ -216,4 +211,34 @@ void Game::handleCarInput(float deltaTime) {
         }
         _car.reset();
     }
+}
+
+void Game::drawArrow() {
+    float angle = atan2(_winPosition.y - _player->getPosition().y,
+                        _winPosition.x - _player->getPosition().x);
+
+    Vector2 direction = {cos(angle), sin(angle)};
+    float distance =
+        Vector2Length(Vector2Subtract(_winPosition, _player->getPosition()));
+    distance /= 2;
+    distance = distance > 200 ? 200 : distance;
+
+    Vector2 coss = {cos(GetTime() * 4) * 30, cos(GetTime() * 4) * 30};
+    Vector2 dirCos = Vector2Multiply(direction, coss);
+
+    direction = Vector2Scale(direction, distance);
+    direction = Vector2Add(direction, dirCos);
+
+    DrawTexturePro(
+        _arrow, (Rectangle){0, 0, (float)_arrow.width, (float)_arrow.height},
+        (Rectangle){_player->getPosition().x + direction.x,
+                    _player->getPosition().y + direction.y, 100, 100},
+        (Vector2){50, 50}, angle * RAD2DEG, WHITE);
+}
+
+void Game::drawDrop() {
+    DrawTexturePro(_drop,
+                   (Rectangle){0, 0, (float)_drop.width, (float)_drop.height},
+                   (Rectangle){_winPosition.x, _winPosition.y, 100, 100},
+                   (Vector2){50, 50}, 0, WHITE);
 }
