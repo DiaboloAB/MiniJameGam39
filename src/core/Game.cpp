@@ -202,16 +202,16 @@ void Game::handleCarInput(float deltaTime) {
 
     if (_car) {
         if (IsKeyDown(KEY_UP)) {
-            _car->accelerate(600 * deltaTime);  // Accélère
+            _car->accelerate(600 * deltaTime);
         }
         if (IsKeyDown(KEY_DOWN)) {
-            _car->accelerate(-150 * deltaTime);  // Freine
+            _car->accelerate(-150 * deltaTime);
         }
         if (IsKeyDown(KEY_LEFT)) {
-            _car->turn(-120 * deltaTime);  // Tourne à gauche
+            _car->turn(-120 * deltaTime);
         }
         if (IsKeyDown(KEY_RIGHT)) {
-            _car->turn(120 * deltaTime);  // Tourne à droite
+            _car->turn(120 * deltaTime);
         }
         Vector2 prevPosition = _car->getPosition();
         _car->update(deltaTime);
