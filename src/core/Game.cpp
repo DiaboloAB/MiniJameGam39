@@ -90,6 +90,8 @@ SceneType Game::update(float deltaTime) {
             return SceneType::VICTORY;
         }
     }
+    if (_player->_panic > 16)
+        return SceneType::GAME_OVER;
     return SceneType::GAME;
 }
 

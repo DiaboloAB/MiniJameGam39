@@ -4,9 +4,10 @@
  * Date, Location: 2025, Rennes
  **********************************************************************************/
 
+#include <string>
+
 #include "GameOver.hpp"
 #include "raylib.h"
-#include <string>
 
 GameOver::GameOver(int screenWidth, int screenHeight)
     : _screenWidth(screenWidth),
@@ -50,14 +51,22 @@ SceneType GameOver::update(float _deltaTime) {
 }
 
 void GameOver::draw() {
-    DrawTextureEx(_background, (Vector2){_scrollingBack, 20}, 0.0f, 5.0f, WHITE);
-    DrawTextureEx(_background, (Vector2){_background.width * 5 + _scrollingBack, 20}, 0.0f, 5.0f, WHITE);
+    DrawTextureEx(_background, (Vector2){_scrollingBack, 20}, 0.0f, 5.0f,
+                  WHITE);
+    DrawTextureEx(_background,
+                  (Vector2){_background.width * 5 + _scrollingBack, 20}, 0.0f,
+                  5.0f, WHITE);
     DrawTextureEx(_midground, (Vector2){_scrollingMid, 20}, 0.0f, 5.0f, WHITE);
-    DrawTextureEx(_midground, (Vector2){_midground.width * 5 + _scrollingMid, 20}, 0.0f, 5.0f, WHITE);
-    DrawTextureEx(_foreground, (Vector2){_scrollingFore, 70}, 0.0f, 5.0f, WHITE);
-    DrawTextureEx(_foreground, (Vector2){_foreground.width * 5 + _scrollingFore, 70}, 0.0f, 5.0f, WHITE);
+    DrawTextureEx(_midground,
+                  (Vector2){_midground.width * 5 + _scrollingMid, 20}, 0.0f,
+                  5.0f, WHITE);
+    DrawTextureEx(_foreground, (Vector2){_scrollingFore, 70}, 0.0f, 5.0f,
+                  WHITE);
+    DrawTextureEx(_foreground,
+                  (Vector2){_foreground.width * 5 + _scrollingFore, 70}, 0.0f,
+                  5.0f, WHITE);
 
-    std::string gameOver = "YOU WIN";
+    std::string gameOver = "GAME OVER";
     int fontSizeTitle = 100;
     int textWidth = MeasureText(gameOver.c_str(), fontSizeTitle);
     int centerX = _screenWidth / 2 - textWidth / 2;
@@ -69,8 +78,9 @@ void GameOver::draw() {
     int totalSeconds = static_cast<int>(GameStats::finalTime);
     int minutes = totalSeconds / 60;
     int seconds = totalSeconds % 60;
-    std::string timeString = (minutes < 10 ? "0" : "") + std::to_string(minutes) + ":" +
-                             (seconds < 10 ? "0" : "") + std::to_string(seconds);
+    std::string timeString =
+        (minutes < 10 ? "0" : "") + std::to_string(minutes) + ":" +
+        (seconds < 10 ? "0" : "") + std::to_string(seconds);
 
     std::string bonusString = std::to_string(GameStats::finalBonus);
 
@@ -85,13 +95,19 @@ void GameOver::draw() {
 
     int statsX = _screenWidth / 2 - (maxStatWidth + iconSize + spacing) / 2;
 
-    DrawTextureEx(_timeTexture, {(float)statsX, (float)statsY}, 0.0f, 1.5f, WHITE);
-    DrawText(timeString.c_str(), statsX + iconSize + spacing, statsY + 10, fontSizeStats, RED);
-    DrawText(timeString.c_str(), statsX + iconSize + spacing, statsY + 5, fontSizeStats, WHITE);
+    DrawTextureEx(_timeTexture, {(float)statsX, (float)statsY}, 0.0f, 1.5f,
+                  WHITE);
+    DrawText(timeString.c_str(), statsX + iconSize + spacing, statsY + 10,
+             fontSizeStats, RED);
+    DrawText(timeString.c_str(), statsX + iconSize + spacing, statsY + 5,
+             fontSizeStats, WHITE);
 
-    DrawTextureEx(_bonusTexture, {(float)statsX, (float)statsY + 70}, 0.0f, 1.5f, WHITE);
-    DrawText(bonusString.c_str(), statsX + iconSize + spacing, statsY + 80, fontSizeStats, RED);
-    DrawText(bonusString.c_str(), statsX + iconSize + spacing, statsY + 75, fontSizeStats, WHITE);
+    DrawTextureEx(_bonusTexture, {(float)statsX, (float)statsY + 70}, 0.0f,
+                  1.5f, WHITE);
+    DrawText(bonusString.c_str(), statsX + iconSize + spacing, statsY + 80,
+             fontSizeStats, RED);
+    DrawText(bonusString.c_str(), statsX + iconSize + spacing, statsY + 75,
+             fontSizeStats, WHITE);
 
     _playButton.Draw();
     _quitButton.Draw();
