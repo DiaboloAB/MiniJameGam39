@@ -24,6 +24,7 @@ SceneManager::SceneManager(int screenWidth, int screenHeight)
     _menu = std::make_unique<Menu>(screenWidth, screenHeight);
     _game = std::make_unique<Game>(screenWidth, screenHeight);
     _gameOver = std::make_unique<GameOver>(screenWidth, screenHeight);
+    _victory = std::make_unique<Victory>(screenWidth, screenHeight);
 }
 
 void SceneManager::run() {
@@ -49,6 +50,9 @@ void SceneManager::update() {
         case SceneType::GAME_OVER:
             _currentScene = _gameOver->update(_deltaTime);
             break;
+        case SceneType::VICTORY:
+            _currentScene = _victory->update(_deltaTime);
+            break;
         case SceneType::EXIT:
             return;
     }
@@ -66,6 +70,9 @@ void SceneManager::draw() {
             break;
         case SceneType::GAME_OVER:
             _gameOver->draw();
+            break;
+        case SceneType::VICTORY:
+            _victory->draw();
             break;
         case SceneType::EXIT:
             return;

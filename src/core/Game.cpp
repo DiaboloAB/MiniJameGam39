@@ -86,6 +86,8 @@ SceneType Game::update(float deltaTime) {
 
         if (_playerSaved && _planePosition.x > _screenWidth) {
             _planeMoving = false;
+            resetGame();
+            return SceneType::VICTORY;
         }
     }
     return SceneType::GAME;
@@ -156,7 +158,9 @@ void Game::draw() {
                        (Vector2){(float)_screenWidth, (float)_screenHeight}, 2);
 
     // drawCameraTarget(_camera);
-    drawArrow();
+    if (!_playerSaved) {
+        drawArrow();
+    }
 
     EndMode2D();
 
