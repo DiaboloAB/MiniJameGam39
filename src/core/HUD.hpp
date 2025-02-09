@@ -19,6 +19,7 @@ public:
 
     void update(float deltaTime, int panic, int bonus);
     void draw();
+    void drawTimer(float deltaTime);
 
 private:
     Animation* _panicBarAnimation;
