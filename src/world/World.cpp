@@ -17,7 +17,7 @@ World::World() {
     for (int i = -100; i < 100; i++) {
         for (int j = -100; j < 100; j++) {
             auto chunkCoords = std::make_pair(i, j);
-            _chunksSpawned
+            // _chunksSpawned
             _chunks[chunkCoords] = 0;
         }
     }
