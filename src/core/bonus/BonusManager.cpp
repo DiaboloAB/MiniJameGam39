@@ -52,7 +52,7 @@ void BonusManager::activateBonus(BonusName name, Player* player) {
             break;
         case BonusName::MONEY:
             player->_panic--;
-            player->etSpeed(player->getSpeed() + 10);
+            player->setSpeed(player->getSpeed() + 10);
             break;
     }
 }
