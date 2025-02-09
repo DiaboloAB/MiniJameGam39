@@ -6,6 +6,7 @@
 
 #include "./scene/SceneType.hpp"
 #include "Game.hpp"
+#include "core/AudioManager.hpp"
 #include "raylib.h"
 #include "raymath.h"
 
@@ -26,7 +27,7 @@ Game::Game(int screenWidth, int screenHeight)
 
     // get a value on a circle of radius 1000
     // _winPosition = {1500 * cos(PI / 4), 1500 * sin(PI / 4)};
-    _winPosition = {1000, 0};
+    _winPosition = _world->getRandomWinPoint();
 
     Image arrow = LoadImage("assets/arrow.png");
     _arrow = LoadTextureFromImage(arrow);
@@ -256,6 +257,7 @@ void Game::handleCarInput(float deltaTime) {
         _player->setPosition(newPositionP);
     }
     if (_player->_drivingTimer <= 0) {
+        AudioManager::getInstance().stopCar();
         _player->_drivingMode = false;
         _player->setPosition(_car->getPosition());
     }
@@ -292,9 +294,9 @@ void Game::drawDrop() {
 }
 
 void Game::resetGame() {
-    _player->setPosition({0, 0});
-    _player->_drivingMode = false;
-    _player->_drivingTimer = 0.0f;
-    _car.reset();
-    _hud->reset();
+    // _player->setPosition({0, 0});
+    // _player->_drivingMode = false;
+    // _player->_drivingTimer = 0.0f;
+    // _car.reset();
+    // _hud->reset();
 }

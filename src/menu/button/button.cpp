@@ -1,4 +1,5 @@
 #include "button.hpp"
+#include "iostream"
 #include "raylib.h"
 
 #define NUM_FRAMES 3  // Nombre de frames dans la texture

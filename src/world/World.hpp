@@ -48,6 +48,7 @@ public:
 
     void spawnEntities(EntityManager* entityManager, BonusManager* bonusManager,
                        Rectangle player);
+    Vector2 getRandomWinPoint();
 
 private:
     Image _tileset;
@@ -60,6 +61,7 @@ private:
     std::unordered_map<std::pair<int, int>, int, std::hash<std::pair<int, int>>,
                        PairEqual>
         _chunksSpawned;
+    bool checkCollisionWithExistingRectangles(Rectangle rect);
 };
 
 #endif  // WORLD_H

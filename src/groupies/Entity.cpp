@@ -5,6 +5,7 @@
  **********************************************************************************/
 
 #include "Entity.hpp"
+#include "core/AudioManager.hpp"
 
 Entity::Entity() {
     _position = {0, 0};
@@ -60,6 +61,7 @@ bool Entity::update(float deltaTime, Player* player, World* world) {
 
     if (!_following && distance < 300) {
         if (!_satisfied) {
+            AudioManager::getInstance().playFootStep();
             _following = true;
             setEmoji(1);
         }
@@ -72,7 +74,7 @@ bool Entity::update(float deltaTime, Player* player, World* world) {
         if (!_satisfied) {
             _satisfied = true;
             _following = false;
-            player->_panic += 1;
+            player->_panic += 2;
             player->setSpeed(350);
             setEmoji(2);
         }

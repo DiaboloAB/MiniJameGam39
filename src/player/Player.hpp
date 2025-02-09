@@ -51,7 +51,7 @@ public:
 
     float _panic;  // 16 levels of panic
     bool _drivingMode = false;
-    float _drivingTimer = 10.0f;
+    float _drivingTimer = 6.0f;
 
 private:
     Vector2 _position;

@@ -117,3 +117,28 @@ void World::spawnEntities(EntityManager* entityManager,
         }
     }
 }
+
+Vector2 World::getRandomWinPoint() {
+    float distance = 1000.0f;
+    Vector2 point;
+    Rectangle pointRect;
+
+    do {
+        float angle = static_cast<float>(std::rand()) / RAND_MAX * 2.0f * PI;
+
+        point.x = distance * std::cos(angle);
+        point.y = distance * std::sin(angle);
+
+        pointRect = {point.x - 10, point.y - 10, 20, 20};
+
+    } while (checkCollisionWithExistingRectangles(pointRect));
+
+    return point;
+}
+
+bool World::checkCollisionWithExistingRectangles(Rectangle rect) {
+    Rectangle col = getCollisions(rect);
+    if (col.height == 0 && col.width == 0)
+        return false;
+    return true;
+}

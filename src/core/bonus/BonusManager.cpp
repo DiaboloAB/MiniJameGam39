@@ -5,6 +5,7 @@
  **********************************************************************************/
 
 #include "BonusManager.hpp"
+#include "core/AudioManager.hpp"
 #include "iostream"
 #include "raymath.h"
 
@@ -49,10 +50,12 @@ void BonusManager::update(float deltaTime, Player* player) {
 void BonusManager::activateBonus(BonusName name, Player* player) {
     switch (name) {
         case BonusName::CAR:
+            AudioManager::getInstance().startCar();
             player->_drivingMode = true;
-            player->_drivingTimer = 10.0f;
+            player->_drivingTimer = 6.0f;
             break;
         case BonusName::MONEY:
+            AudioManager::getInstance().playCoin();
             player->_panic--;
             player->setSpeed(player->getSpeed() + 10);
             player->addBonus();
@@ -73,13 +76,13 @@ void BonusManager::draw() {
                 DrawTexturePro(
                     _car, (Rectangle){0, 0, 32, 32},
                     (Rectangle){bonus.position.x, bonus.position.y, 128, 128},
-                    (Vector2){32, 32}, 0, WHITE);
+                    (Vector2){64, 64}, 0, WHITE);
                 break;
             case BonusName::MONEY:
-                DrawTextureEx(
-                    _money,
-                    (Vector2){bonus.position.x, bonus.position.y + cosM}, 0, 2,
-                    WHITE);
+                DrawTextureEx(_money,
+                              (Vector2){bonus.position.x - 32,
+                                        bonus.position.y - 32 + cosM},
+                              0, 2, WHITE);
                 break;
         }
     }

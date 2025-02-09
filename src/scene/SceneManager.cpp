@@ -7,6 +7,7 @@
 
 #include "../menu/Menu.hpp"
 #include "SceneManager.hpp"
+#include "core/AudioManager.hpp"
 
 SceneManager::SceneManager(int screenWidth, int screenHeight)
     : _screenWidth(screenWidth),
@@ -14,12 +15,15 @@ SceneManager::SceneManager(int screenWidth, int screenHeight)
       _currentScene(SceneType::MENU){
     _lastTime = std::chrono::high_resolution_clock::now();
     _deltaTime = 0;
-    InitAudioDevice();
-    // set sound to 50% volume
-    // SetMasterVolume(0.05);
-    SetMasterVolume(0.0);
+    // SetMasterVolume(0.5);
+    // SetMasterVolume(0.0);
     InitWindow(screenWidth, screenHeight, "Brad Pitt Simulator");
     SetTargetFPS(60);
+    InitAudioDevice();
+    AudioManager::getInstance().init();
+    _music = LoadMusicStream("assets/audio/music.ogg");
+    SetMusicVolume(_music, 0.5);
+    PlayMusicStream(_music);
 
     _menu = std::make_unique<Menu>(screenWidth, screenHeight);
     _game = std::make_unique<Game>(screenWidth, screenHeight);
@@ -33,6 +37,9 @@ void SceneManager::run() {
         std::chrono::duration<float> elapsedTime = currentTime - _lastTime;
         _deltaTime = elapsedTime.count();
         _lastTime = currentTime;
+
+        UpdateMusicStream(_music);
+        AudioManager::getInstance().updateMusic();
 
         update();
         draw();

@@ -6,10 +6,10 @@
 
 #include "../core/Game.hpp"
 #include "SceneType.hpp"
-#include "menu/Menu.hpp"
 #include "gameover/GameOver.hpp"
-#include "victory/Victory.hpp"
+#include "menu/Menu.hpp"
 #include "raylib.h"
+#include "victory/Victory.hpp"
 
 class SceneManager {
 public:
@@ -26,7 +26,7 @@ private:
     int _screenWidth;
     int _screenHeight;
     SceneType _currentScene;
-
+    Music _music;
     std::unique_ptr<Menu> _menu;
     std::unique_ptr<Game> _game;
     std::unique_ptr<GameOver> _gameOver;
