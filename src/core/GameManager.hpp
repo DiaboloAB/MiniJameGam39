@@ -7,6 +7,7 @@
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 
+#include "bonus/BonusManager.hpp"
 #include "groupies/EntityManager.hpp"
 #include "player/Player.hpp"
 #include "world/World.hpp"
@@ -18,7 +19,8 @@ public:
     ~GameManager();
 
     // Methods
-    void update(float deltaTime, Vector2 camTopLeft, Vector2 screenSize);
+    void update(float deltaTime);
+    void draw();
 
     // Getters
 
@@ -30,6 +32,7 @@ private:
     EntityManager *_entityManager;
     World *_world;
     Player *_player;
+    BonusManager *_bonusManager;
     // Member variables
 };
 

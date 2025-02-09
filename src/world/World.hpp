@@ -7,6 +7,7 @@
 #ifndef WORLD_H
 #define WORLD_H
 
+#include "core/bonus/BonusManager.hpp"
 #include "raylib.h"
 #include "tinyxml2.h"
 #include "world/tilemap/Tilemap.hpp"
@@ -15,6 +16,8 @@
 #include <memory>
 #include <unordered_map>
 #include <vector>
+
+class EntityManager;
 
 namespace std {
 template <>
@@ -43,7 +46,8 @@ public:
 
     Vector2 getChunkXY(Vector2 position);
 
-    Vector2 getSpawn(Vector2 camTopLeft, Vector2 screenSize);
+    void spawnEntities(EntityManager* entityManager, BonusManager* bonusManager,
+                       Rectangle player);
 
 private:
     Image _tileset;

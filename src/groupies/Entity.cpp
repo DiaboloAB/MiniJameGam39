@@ -68,11 +68,12 @@ bool Entity::update(float deltaTime, Player* player, World* world) {
     if ((player->getIsDriving() && distance < 40) || (distance > 6000))
         return true;
 
-    if (distance < 18) {
+    if (distance < 25) {
         if (!_satisfied) {
             _satisfied = true;
             _following = false;
             player->_panic += 1;
+            player->setSpeed(350);
             setEmoji(2);
         }
         return false;

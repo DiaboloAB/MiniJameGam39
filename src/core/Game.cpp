@@ -67,8 +67,7 @@ SceneType Game::update(float deltaTime) {
 
     _player->setIsDriving(_drivingMode);
     _entityManager->update(deltaTime, _player.get(), _world.get());
-    _gameManager->update(deltaTime, _camera.target - _camera.offset,
-                         (Vector2){(float)_screenWidth, (float)_screenHeight});
+    _gameManager->update(deltaTime);
 
     if (CheckCollisionCircles(_player->getPosition(), 20, _winPosition, 50)) {
         _planeMoving = true;
@@ -161,6 +160,8 @@ void Game::draw() {
     if (!_playerSaved) {
         drawArrow();
     }
+    drawArrow();
+    _gameManager->draw();
 
     EndMode2D();
 

@@ -9,23 +9,19 @@
 GameManager::GameManager(World *world, EntityManager *entityManager,
                          Player *player)
     : _world(world), _entityManager(entityManager), _player(player) {
-    // Constructor implementation
+    _bonusManager = new BonusManager();
 }
 
 GameManager::~GameManager() {
     // Destructor implementation
 }
 
-void GameManager::update(float deltaTime, Vector2 camTopLeft,
-                         Vector2 screenSize) {
-    _spawnTimer += deltaTime;
-    if (_spawnTimer > 0.5) {
-        for (int i = 0; i < 4; i++) {
-            std::cout << "test" << std::endl;
-            _entityManager->spawnEntity(
-                _world->getSpawn(camTopLeft, screenSize));
-        }
+void GameManager::update(float deltaTime) {
+    _world->spawnEntities(_entityManager, _bonusManager,
+                          _player->getBoundingBox());
+    _bonusManager->update(deltaTime, _player);
+}
 
-        _spawnTimer = 0;
-    }
+void GameManager::draw() {
+    _bonusManager->draw();
 }

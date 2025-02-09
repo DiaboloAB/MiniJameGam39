@@ -8,6 +8,7 @@
 #include <sstream>
 
 #include "Tilemap.hpp"
+#include "groupies/EntityManager.hpp"
 
 void Tilemap::loadMap(const char* name, const char* csvData) {
     if (strcmp(name, "layer1") == 0) {
@@ -37,6 +38,13 @@ void Tilemap::loadMap(const char* name, const char* csvData) {
         std::string item;
         while (std::getline(ss, item, ',')) {
             wallLayer.push_back(std::stoi(item));
+        }
+    } else if (strcmp(name, "bonus") == 0) {
+        bonusLayer.clear();
+        std::stringstream ss(csvData);
+        std::string item;
+        while (std::getline(ss, item, ',')) {
+            bonusLayer.push_back(std::stoi(item));
         }
     }
 }
@@ -191,19 +199,23 @@ Rectangle Tilemap::getCollisions(Rectangle player, Vector2 position) {
     return {0, 0, 0, 0};
 }
 
-Vector2 Tilemap::getSpawn() {
-    int random = GetRandomValue(0, 1);
-
+void Tilemap::spawnEntities(Vector2 chunkPos, EntityManager* entityManager,
+                            BonusManager* bonusManager) {
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             int tileIndex = spawnLayer[y * width + x];
             if (tileIndex > 0) {
-                random--;
-                if (random != 0) {
-                    return {x * tileWidth * 4, y * tileHeight * 4};
-                }
+                entityManager->spawnEntity(
+                    (Vector2){x * tileWidth * 4 + chunkPos.x,
+                              y * tileHeight * 4 + chunkPos.y});
+            }
+            tileIndex = bonusLayer[y * width + x];
+            if (tileIndex > 0) {
+                bonusManager->addBonus(
+                    Bonus{tileIndex % 2 ? BonusName::MONEY : BonusName::CAR,
+                          (Vector2){x * tileWidth * 4 + chunkPos.x,
+                                    y * tileHeight * 4 + chunkPos.y}});
             }
         }
     }
-    return {0, 0};
 }

@@ -17,7 +17,7 @@ World::World() {
     for (int i = -100; i < 100; i++) {
         for (int j = -100; j < 100; j++) {
             auto chunkCoords = std::make_pair(i, j);
-            // _chunksSpawned
+            _chunksSpawned[chunkCoords] = 0;
             _chunks[chunkCoords] = 0;
         }
     }
@@ -89,47 +89,31 @@ Rectangle World::getCollisions(Rectangle player) {
     return {0, 0, 0, 0};
 }
 
-Vector2 World::getSpawn(Vector2 camTopLeft, Vector2 screenSize) {
+void World::spawnEntities(EntityManager* entityManager,
+                          BonusManager* bonusManager, Rectangle player) {
     int chunkSize = 32 * 16 * 4;
 
-    // get a spawn on a random chunk outside the screen
-    Vector2 startChunk = Vector2Subtract(getChunkXY(camTopLeft), {1, 1});
+    Vector2 startChunk = Vector2Subtract(
+        getChunkXY((Vector2){player.x, player.y}), (Vector2){1, 1});
     Vector2 endChunk =
-        Vector2Add(getChunkXY((Vector2){camTopLeft.x + screenSize.x,
-                                        camTopLeft.y + screenSize.y}),
-                   {1, 1});
+        Vector2Add(getChunkXY((Vector2){player.x + player.width,
+                                        player.y + player.height}),
+                   (Vector2){1, 1});
 
-    // choose 1 chunk randomly on the border of the screen
-
-    int side = GetRandomValue(0, 3);
-
-    Vector2 spawnChunk = {0, 0};
-
-    switch (side) {
-        case 0:  // top
-            spawnChunk.x = GetRandomValue(startChunk.x, endChunk.x);
-            spawnChunk.y = startChunk.y;
-            break;
-        case 1:  // right
-            spawnChunk.x = endChunk.x;
-            spawnChunk.y = GetRandomValue(startChunk.y, endChunk.y);
-            break;
-        case 2:  // bottom
-            spawnChunk.x = GetRandomValue(startChunk.x, endChunk.x);
-            spawnChunk.y = endChunk.y;
-            break;
-        case 3:  // left
-            spawnChunk.x = startChunk.x;
-            spawnChunk.y = GetRandomValue(startChunk.y, endChunk.y);
-            break;
+    for (int i = startChunk.x; i <= endChunk.x; i++) {
+        for (int j = startChunk.y; j <= endChunk.y; j++) {
+            if (i != startChunk.x && i != endChunk.x && j != startChunk.y &&
+                j != endChunk.y)
+                continue;
+            auto chunkCoords = std::make_pair(i, j);
+            if (_chunks.find(chunkCoords) == _chunks.end()) {
+                _chunks[chunkCoords] = 0;
+            }
+            if (!_chunksSpawned[chunkCoords]) {
+                Vector2 chunkPos = {i * chunkSize, j * chunkSize};
+                _tilemap->spawnEntities(chunkPos, entityManager, bonusManager);
+                _chunksSpawned[chunkCoords] = 1;
+            }
+        }
     }
-
-    auto chunkCoords = std::make_pair(spawnChunk.x, spawnChunk.y);
-    if (_chunks.find(chunkCoords) == _chunks.end()) {
-        _chunks[chunkCoords] = 0;
-    }
-
-    Vector2 chunkPos = {spawnChunk.x * chunkSize, spawnChunk.y * chunkSize};
-
-    return Vector2Add(chunkPos, _tilemap->getSpawn());
 }

@@ -13,6 +13,9 @@
 #include "raylib.h"
 #include "tinyxml2.h"
 
+class BonusManager;
+class EntityManager;
+
 class Tilemap {
 public:
     bool loadFromFile(const std::string& filename);
@@ -21,7 +24,8 @@ public:
     void loadMap(const char* name, const char* csvData);
     void drawWall(Vector2 position = {0, 0});
 
-    Vector2 getSpawn();
+    void spawnEntities(Vector2 chunkPos, EntityManager* entityManager,
+                       BonusManager* bonusManager);
 
     Rectangle getCollisions(Rectangle player, Vector2 position = {0, 0});
 
@@ -34,6 +38,7 @@ private:
     std::vector<int> layer2;
     std::vector<int> wallLayer;
     std::vector<int> spawnLayer;
+    std::vector<int> bonusLayer;
 };
 
 #endif  // TILEMAP_H

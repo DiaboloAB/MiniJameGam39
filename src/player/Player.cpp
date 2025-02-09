@@ -7,7 +7,7 @@
 #include "Player.hpp"
 
 Player::Player() {
-    _position = {0, 0};
+    _position = {64, 64};
     Texture2D texture = LoadTexture("assets/player.png");
     if (texture.id == 0) {
         throw std::runtime_error("Failed to load player texture");
@@ -41,6 +41,15 @@ void Player::move(Vector2 direction) {
 }
 
 void Player::update(float deltaTime) {
+    if (_speed > 430)
+        _speed = 430;
+    if (_speed < 400)
+        _speed += deltaTime;
+    if (_speed > 400)
+        _speed -= deltaTime;
+    if (_speed > 395 && _speed < 405)
+        _speed = 400;
+
     if (_isMoving) {
         _animation->update(deltaTime, 3);
     } else {
