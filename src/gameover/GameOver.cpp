@@ -1,19 +1,19 @@
-/*
-** EPITECH PROJECT, 2025
-** MiniJameGam39
-** File description:
-** Menu
-*/
+/**********************************************************************************
+ * Project: MINI JAME GAM #39
+ * Authors: Alexis BOITEL, Justine LOIZEL & Augustin BOST
+ * Date, Location: 2025, Rennes
+ **********************************************************************************/
 
-#include "Menu.hpp"
+#include "GameOver.hpp"
 #include "raylib.h"
+#include <string>
 
-Menu::Menu(int screenWidth, int screenHeight)
+GameOver::GameOver(int screenWidth, int screenHeight)
     : _screenWidth(screenWidth),
       _screenHeight(screenHeight),
       _playButton(610, 550, "assets/button/groupe_button.png",
                   "assets/button/sound-button.wav",
-                  "assets/Font/pixantiqua.png", "Play", 4, 2, WHITE),
+                  "assets/Font/pixantiqua.png", "Retry", 4, 2, WHITE),
       _quitButton(1010, 550, "assets/button/groupe_button.png",
                   "assets/button/sound-button.wav",
                   "assets/Font/pixantiqua.png", "Quit", 4, 2, WHITE) {
@@ -22,10 +22,10 @@ Menu::Menu(int screenWidth, int screenHeight)
     _foreground = LoadTexture("./assets/paralax/layers/foreground.png");
 }
 
-Menu::~Menu() {
+GameOver::~GameOver() {
 }
 
-SceneType Menu::update(float _deltaTime) {
+SceneType GameOver::update(float _deltaTime) {
     _scrollingBack -= 0.2f;
     _scrollingMid -= 1.0f;
     _scrollingFore -= 2.0f;
@@ -43,10 +43,10 @@ SceneType Menu::update(float _deltaTime) {
     if (_quitButton.IsClicked()) {
         return SceneType::EXIT;
     }
-    return SceneType::MENU;
+    return SceneType::GAME_OVER;
 }
 
-void Menu::draw() {
+void GameOver::draw() {
     DrawTextureEx(_background, (Vector2){_scrollingBack, 20}, 0.0f, 5.0f,
                   WHITE);
     DrawTextureEx(_background,
@@ -62,8 +62,15 @@ void Menu::draw() {
                   (Vector2){_foreground.width * 5 + _scrollingFore, 70}, 0.0f,
                   5.0f, WHITE);
 
-    DrawText("BRAD PITT SIMULATOR", 320, 440, 100, RED);
-    DrawText("BRAD PITT SIMULATOR", 320, 430, 100, WHITE);
+    std::string gameOver = "GAME OVER";
+    int fontSize = 100;
+    int textWidth = MeasureText(gameOver.c_str(), fontSize);
+
+    int centerX = _screenWidth / 2 - textWidth / 2 - 30;
+    int centerY = 320;
+
+    DrawText(gameOver.c_str(), centerX, centerY, fontSize, RED);
+    DrawText(gameOver.c_str(), centerX, centerY - 10, fontSize, WHITE);
 
     _playButton.Draw();
     _quitButton.Draw();

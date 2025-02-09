@@ -68,6 +68,10 @@ SceneType Game::update(float deltaTime) {
     _entityManager->update(deltaTime, _player.get(), _world.get());
     _gameManager->update(deltaTime, _camera.target - _camera.offset,
                          (Vector2){(float)_screenWidth, (float)_screenHeight});
+
+    if (_drivingMode) {
+        return SceneType::GAME_OVER;
+    }
     return SceneType::GAME;
 }
 
