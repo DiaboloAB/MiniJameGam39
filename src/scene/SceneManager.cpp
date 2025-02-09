@@ -11,7 +11,7 @@
 SceneManager::SceneManager(int screenWidth, int screenHeight)
     : _screenWidth(screenWidth),
       _screenHeight(screenHeight),
-      _currentScene(SceneType::MENU) {
+      _currentScene(SceneType::MENU){
     _lastTime = std::chrono::high_resolution_clock::now();
     _deltaTime = 0;
     InitAudioDevice();
@@ -45,13 +45,22 @@ void SceneManager::update() {
             _currentScene = _menu->update(_deltaTime);
             break;
         case SceneType::GAME:
+            
             _currentScene = _game->update(_deltaTime);
             break;
         case SceneType::GAME_OVER:
             _currentScene = _gameOver->update(_deltaTime);
+            if (_currentScene == SceneType::GAME) {
+                _game.reset();
+                _game = std::make_unique<Game>(_screenWidth, _screenHeight);
+            }
             break;
         case SceneType::VICTORY:
             _currentScene = _victory->update(_deltaTime);
+            if (_currentScene == SceneType::GAME) {
+                _game.reset();
+                _game = std::make_unique<Game>(_screenWidth, _screenHeight);
+            }
             break;
         case SceneType::EXIT:
             return;
