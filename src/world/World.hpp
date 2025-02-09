@@ -53,6 +53,9 @@ private:
     std::unordered_map<std::pair<int, int>, int, std::hash<std::pair<int, int>>,
                        PairEqual>
         _chunks;
+    std::unordered_map<std::pair<int, int>, int, std::hash<std::pair<int, int>>,
+                       PairEqual>
+        _chunksSpawned;
 };
 
 #endif  // WORLD_H
