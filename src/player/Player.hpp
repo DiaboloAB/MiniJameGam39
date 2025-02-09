@@ -38,13 +38,22 @@ public:
         return _bonus;
     }
 
+    bool getIsDriving() {
+        return _isDriving;
+    }
+
+    void setIsDriving(bool isDriving) {
+        _isDriving = isDriving;
+    }
+
 private:
     Vector2 _position;
     Animation* _animation;
     int _direction;  // 0: Left, 1: Down, 2: Up, 3: Right
     bool _isMoving;
-    int _panic; // 16 levels of panic
+    int _panic;  // 16 levels of panic
     int _bonus;
+    bool _isDriving = false;
 };
 
 #endif  // PLAYER_H

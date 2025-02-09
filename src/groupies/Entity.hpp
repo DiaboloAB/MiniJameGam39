@@ -28,7 +28,7 @@ public:
     void setPosition(Vector2 position) {
         _position = position;
     }
-    void update(float deltaTime, Player* player, World* world);
+    bool update(float deltaTime, Player* player, World* world);
 
     Rectangle getBoundingBox();
 

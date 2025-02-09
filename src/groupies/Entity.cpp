@@ -40,15 +40,20 @@ void Entity::move(Vector2 direction) {
     }
 }
 
-void Entity::update(float deltaTime, Player* player, World* world) {
+bool Entity::update(float deltaTime, Player* player, World* world) {
     Vector2 direction = {0, 0};
     float speed = 400 * deltaTime;
 
     direction.x = player->getPosition().x - _position.x;
     direction.y = player->getPosition().y - _position.y;
 
-    if (Vector2Distance(player->getPosition(), _position) < 5) {
-        return;
+    float distance = Vector2Distance(player->getPosition(), _position);
+
+    if (player->getIsDriving() && distance < 20)
+        return true;
+
+    if (distance < 5) {
+        return false;
     }
 
     if (Vector2Length(direction) > 0) {
@@ -83,6 +88,7 @@ void Entity::update(float deltaTime, Player* player, World* world) {
 
         _animation->update(deltaTime, 3);
     }
+    return false;
 }
 
 void Entity::draw() {

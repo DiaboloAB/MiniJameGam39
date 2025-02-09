@@ -15,7 +15,7 @@ EntityManager::~EntityManager() {
 }
 
 void EntityManager::killEntity(int id) {
-    _entities.erase(id);
+    _killQueue.push(id);
 }
 
 int EntityManager::spawnEntity(Vector2 position) {
@@ -59,7 +59,14 @@ void EntityManager::handleCollision(Entity* entity1, Entity* entity2) {
 
 void EntityManager::update(float deltaTime, Player* player, World* world) {
     for (auto& entity : _entities) {
-        entity.second->update(deltaTime, player, world);
+        if (entity.second->update(deltaTime, player, world))
+            killEntity(entity.first);
+    }
+
+    while (!_killQueue.empty()) {
+        auto id = _killQueue.front();
+        _entities.erase(id);
+        _killQueue.pop();
     }
     for (auto it1 = _entities.begin(); it1 != _entities.end(); ++it1) {
         for (auto it2 = std::next(it1); it2 != _entities.end(); ++it2) {

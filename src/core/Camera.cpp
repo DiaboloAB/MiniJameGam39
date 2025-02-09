@@ -21,7 +21,7 @@ void Game::followPlayer() {
     // the camera move if the player is too far from the center of the screen
 
     float horizontalOffset = 500;
-    float verticalOffset = 225;
+    float verticalOffset = 175;
 
     Vector2 playerScreenPos =
         GetWorldToScreen2D(_player->getPosition(), _camera);
