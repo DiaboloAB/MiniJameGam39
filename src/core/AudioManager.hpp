@@ -22,6 +22,7 @@ public:
         _footStep = LoadSound("assets/audio/footstep.wav");
         _death = LoadSound("assets/audio/death.mp3");
         _coin = LoadSound("assets/audio/coin.wav");
+        SetSoundVolume(_coin, 0.6);
     }
 
     void playFootStep() {
