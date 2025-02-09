@@ -58,10 +58,12 @@ void EntityManager::handleCollision(Entity* entity1, Entity* entity2) {
     }
 }
 
-void EntityManager::update(float deltaTime, Player* player, World* world) {
+void EntityManager::update(float deltaTime, Player* player, World* world,
+                           BonusManager* bonusManager) {
     for (auto& entity : _entities) {
         if (entity.second->update(deltaTime, player, world)) {
-            std::cout << "kill entity: " << entity.first << std::endl;
+            bonusManager->addBonus(
+                Bonus{BonusName::MONEY, entity.second->getPosition()});
             killEntity(entity.first);
         }
     }

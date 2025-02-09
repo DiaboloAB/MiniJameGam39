@@ -65,7 +65,7 @@ bool Entity::update(float deltaTime, Player* player, World* world) {
         }
     }
 
-    if ((player->getIsDriving() && distance < 40) || (distance > 6000))
+    if ((player->_drivingMode && distance < 40) || (distance > 6000))
         return true;
 
     if (distance < 25) {

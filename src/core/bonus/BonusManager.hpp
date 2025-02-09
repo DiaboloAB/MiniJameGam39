@@ -24,6 +24,7 @@ enum class BonusName {
 struct Bonus {
     BonusName name;
     Vector2 position;
+    float timer = 0;
 };
 
 class BonusManager {

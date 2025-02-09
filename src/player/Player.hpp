@@ -37,13 +37,8 @@ public:
     int getBonus() {
         return _bonus;
     }
-
-    bool getIsDriving() {
-        return _isDriving;
-    }
-
-    void setIsDriving(bool isDriving) {
-        _isDriving = isDriving;
+    void addBonus() {
+        _bonus++;
     }
 
     float getSpeed() {
@@ -55,13 +50,15 @@ public:
     }
 
     float _panic;  // 16 levels of panic
+    bool _drivingMode = false;
+    float _drivingTimer = 10.0f;
+
 private:
     Vector2 _position;
     Animation* _animation;
     int _direction;  // 0: Left, 1: Down, 2: Up, 3: Right
     bool _isMoving;
     int _bonus;
-    bool _isDriving = false;
     float _speed = 400;
 };
 

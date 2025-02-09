@@ -212,7 +212,7 @@ void Tilemap::spawnEntities(Vector2 chunkPos, EntityManager* entityManager,
             tileIndex = bonusLayer[y * width + x];
             if (tileIndex > 0) {
                 bonusManager->addBonus(
-                    Bonus{tileIndex % 2 ? BonusName::MONEY : BonusName::CAR,
+                    Bonus{(tileIndex % 2) ? BonusName::MONEY : BonusName::CAR,
                           (Vector2){x * tileWidth * 4 + chunkPos.x,
                                     y * tileHeight * 4 + chunkPos.y}});
             }

@@ -17,6 +17,7 @@ GameManager::~GameManager() {
 }
 
 void GameManager::update(float deltaTime) {
+    _entityManager->update(deltaTime, _player, _world, _bonusManager);
     _world->spawnEntities(_entityManager, _bonusManager,
                           _player->getBoundingBox());
     _bonusManager->update(deltaTime, _player);

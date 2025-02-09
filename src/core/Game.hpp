@@ -57,9 +57,6 @@ private:
     Texture2D _arrow;
     Texture2D _drop;
 
-    float _spawnTimer;
-    bool _drivingMode = false;
-    float _drivingTimer = 0.0f;
 
     Vector2 _winPosition;
 

@@ -21,7 +21,8 @@ public:
     int spawnEntity(Vector2 position);
     void killEntity(int id);
 
-    void update(float deltaTime, Player *player, World *world);
+    void update(float deltaTime, Player *player, World *world,
+                BonusManager *bonusManager);
 
     void handleCollision(Entity *entity1, Entity *entity2);
 

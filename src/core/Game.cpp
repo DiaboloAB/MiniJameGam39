@@ -54,11 +54,9 @@ SceneType Game::update(float deltaTime) {
     direction.x = IsKeyDown(KEY_RIGHT) - IsKeyDown(KEY_LEFT);
     direction.y = IsKeyDown(KEY_DOWN) - IsKeyDown(KEY_UP);
 
-    if (!_drivingMode) {
+    if (!_player->_drivingMode) {
         handlePlayerInput(deltaTime, direction, speed);
-    }
-
-    if (_drivingMode) {
+    } else {
         handleCarInput(deltaTime);
     }
 
@@ -67,8 +65,6 @@ SceneType Game::update(float deltaTime) {
     }
     followPlayer();
 
-    _player->setIsDriving(_drivingMode);
-    _entityManager->update(deltaTime, _player.get(), _world.get());
     _gameManager->update(deltaTime);
 
     if (CheckCollisionCircles(_player->getPosition(), 20, _winPosition, 50)) {
@@ -145,14 +141,10 @@ void Game::draw() {
                        (Vector2){(float)_screenWidth, (float)_screenHeight});
 
     if (!_playerSaved) {
-        if (_drivingMode && _car) {
+        if (_player->_drivingMode)
             _car->draw();
-        } else {
+        else
             _player->draw();
-            if (_car) {
-                _car->draw();
-            }
-        }
     }
     drawDrop();
     _entityManager->draw();
@@ -172,8 +164,8 @@ void Game::draw() {
     // BeginShaderMode(_heartBeatShader);
     // DrawRectangle(0, 0, _screenWidth, _screenHeight, BLACK);
     // EndShaderMode();
-    if (_drivingMode && _car) {
-        _hud->drawTimer(_drivingTimer);
+    if (_player->_drivingMode) {
+        _hud->drawTimer(_player->_drivingTimer);
     }
     if (_player->_panic > 3) {
         float resolution[2] = {(float)_screenWidth, (float)_screenHeight};
@@ -226,16 +218,11 @@ void Game::handlePlayerInput(float deltaTime, Vector2 direction, float speed) {
             _player->setPosition(newPosition);
         }
     }
-    if (_car &&
-        CheckCollisionRecs(_player->getBoundingBox(), _car->getBoundingBox())) {
-        _drivingMode = true;
-        _drivingTimer = 10.0f;
-        _car->setPosition(_player->getPosition());
-    }
+    _car->setPosition(_player->getPosition());
 }
 
 void Game::handleCarInput(float deltaTime) {
-    _drivingTimer -= deltaTime;
+    _player->_drivingTimer -= deltaTime;
 
     if (_car) {
         if (IsKeyDown(KEY_UP)) {
@@ -268,12 +255,9 @@ void Game::handleCarInput(float deltaTime) {
         Vector2 newPositionP = _car->getPosition();
         _player->setPosition(newPositionP);
     }
-    if (_drivingTimer <= 0) {
-        _drivingMode = false;
-        if (_car) {
-            _player->setPosition(_car->getPosition());
-        }
-        _car.reset();
+    if (_player->_drivingTimer <= 0) {
+        _player->_drivingMode = false;
+        _player->setPosition(_car->getPosition());
     }
 }
 
@@ -309,8 +293,8 @@ void Game::drawDrop() {
 
 void Game::resetGame() {
     _player->setPosition({0, 0});
-    _drivingMode = false;
-    _drivingTimer = 0.0f;
+    _player->_drivingMode = false;
+    _player->_drivingTimer = 0.0f;
     _car.reset();
     _hud->reset();
 }

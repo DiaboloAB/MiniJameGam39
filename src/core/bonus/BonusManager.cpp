@@ -32,10 +32,11 @@ void BonusManager::update(float deltaTime, Player* player) {
         Bonus bonus = _bonuses.front();
         _bonuses.pop();
 
+        bonus.timer += deltaTime;
         distance = Vector2Length(
             Vector2Subtract(bonus.position, player->getPosition()));
 
-        if (distance < 40) {
+        if (distance < 40 && bonus.timer > 1) {
             activateBonus(bonus.name, player);
         } else {
             _bonuses.push(bonus);
@@ -48,11 +49,13 @@ void BonusManager::update(float deltaTime, Player* player) {
 void BonusManager::activateBonus(BonusName name, Player* player) {
     switch (name) {
         case BonusName::CAR:
-
+            player->_drivingMode = true;
+            player->_drivingTimer = 10.0f;
             break;
         case BonusName::MONEY:
             player->_panic--;
             player->setSpeed(player->getSpeed() + 10);
+            player->addBonus();
             break;
     }
 }
