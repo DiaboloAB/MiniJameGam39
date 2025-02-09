@@ -33,7 +33,6 @@ private:
     int _screenWidth;
     int _screenHeight;
 
-    Texture2D _panel;
     Texture2D _timeTexture;
     Texture2D _bonusTexture;
 };

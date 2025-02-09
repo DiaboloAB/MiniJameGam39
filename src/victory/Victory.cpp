@@ -22,7 +22,6 @@ Victory::Victory(int screenWidth, int screenHeight)
     _background = LoadTexture("./assets/paralax/layers/far-buildings.png");
     _foreground = LoadTexture("./assets/paralax/layers/foreground.png");
 
-    _panel = LoadTexture("assets/hud-panel.png");
     _timeTexture = LoadTexture("assets/clock.png");
     _bonusTexture = LoadTexture("assets/money.png");
 }
