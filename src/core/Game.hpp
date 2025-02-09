@@ -72,6 +72,8 @@ private:
     bool _planeMoving = false;
     float _planeSpeed = 1200.0f;
     float _planeScale = 1.0f;
+
+    bool _playerSaved = false;
 };
 
 #endif  // GAME_H

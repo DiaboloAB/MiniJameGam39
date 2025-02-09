@@ -76,7 +76,15 @@ SceneType Game::update(float deltaTime) {
     if (_planeMoving) {
         _planePosition.x += _planeSpeed * deltaTime;
 
-        if (_planePosition.x > _screenWidth) {
+        float planeLeft = _planePosition.x;
+        float planeRight = _planePosition.x + _screenWidth;
+        float playerX = _player->getPosition().x;
+
+        if (!_playerSaved && playerX >= planeLeft && playerX <= planeRight) {
+            _playerSaved = true;
+        }
+
+        if (_playerSaved && _planePosition.x > _screenWidth) {
             _planeMoving = false;
         }
     }
@@ -131,12 +139,14 @@ void Game::draw() {
     _world->drawChunks(_camera.target - _camera.offset,
                        (Vector2){(float)_screenWidth, (float)_screenHeight});
 
-    if (_drivingMode && _car) {
-        _car->draw();
-    } else {
-        _player->draw();
-        if (_car) {
+    if (!_playerSaved) {
+        if (_drivingMode && _car) {
             _car->draw();
+        } else {
+            _player->draw();
+            if (_car) {
+                _car->draw();
+            }
         }
     }
     drawDrop();
