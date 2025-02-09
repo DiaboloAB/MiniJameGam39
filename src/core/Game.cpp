@@ -37,6 +37,11 @@ Game::Game(int screenWidth, int screenHeight)
     _resolutionLoc = GetShaderLocation(_heartBeatShader, "resolution");
     _timeLoc = GetShaderLocation(_heartBeatShader, "time");
     _healthLoc = GetShaderLocation(_heartBeatShader, "health");
+
+    Image plane = LoadImage("assets/plane.png");
+    _plane = LoadTextureFromImage(plane);
+    _planeScale = (float)_screenWidth / _plane.width;
+    _planePosition = {-screenWidth, 0};
 }
 
 Game::~Game() {
@@ -65,6 +70,26 @@ SceneType Game::update(float deltaTime) {
     _gameManager->update(deltaTime, _camera.target - _camera.offset,
                          (Vector2){(float)_screenWidth, (float)_screenHeight});
 
+    if (CheckCollisionCircles(_player->getPosition(), 20, _winPosition, 50)) {
+        _planeMoving = true;
+    }
+    if (_planeMoving) {
+        _planePosition.x += _planeSpeed * deltaTime;
+
+        float planeLeft = _planePosition.x;
+        float planeRight = _planePosition.x + _screenWidth;
+        float playerX = _player->getPosition().x;
+
+        if (!_playerSaved && playerX >= planeLeft && playerX <= planeRight) {
+            _playerSaved = true;
+        }
+
+        if (_playerSaved && _planePosition.x > _screenWidth) {
+            _planeMoving = false;
+            resetGame();
+            return SceneType::VICTORY;
+        }
+    }
     return SceneType::GAME;
 }
 
@@ -116,12 +141,14 @@ void Game::draw() {
     _world->drawChunks(_camera.target - _camera.offset,
                        (Vector2){(float)_screenWidth, (float)_screenHeight});
 
-    if (_drivingMode && _car) {
-        _car->draw();
-    } else {
-        _player->draw();
-        if (_car) {
+    if (!_playerSaved) {
+        if (_drivingMode && _car) {
             _car->draw();
+        } else {
+            _player->draw();
+            if (_car) {
+                _car->draw();
+            }
         }
     }
     drawDrop();
@@ -131,7 +158,9 @@ void Game::draw() {
                        (Vector2){(float)_screenWidth, (float)_screenHeight}, 2);
 
     // drawCameraTarget(_camera);
-    drawArrow();
+    if (!_playerSaved) {
+        drawArrow();
+    }
 
     EndMode2D();
 
@@ -156,6 +185,9 @@ void Game::draw() {
         EndShaderMode();
     }
     _hud->draw();
+    if (_planeMoving) {
+        DrawTextureEx(_plane, _planePosition, 0.0f, _planeScale, WHITE);
+    }
 }
 
 void Game::handlePlayerInput(float deltaTime, Vector2 direction, float speed) {

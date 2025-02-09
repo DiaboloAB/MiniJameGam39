@@ -66,6 +66,14 @@ private:
     int _resolutionLoc;
     int _timeLoc;
     int _healthLoc;
+
+    Texture2D _plane;
+    Vector2 _planePosition;
+    bool _planeMoving = false;
+    float _planeSpeed = 1200.0f;
+    float _planeScale = 1.0f;
+
+    bool _playerSaved = false;
 };
 
 #endif  // GAME_H
