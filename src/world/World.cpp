@@ -119,7 +119,7 @@ void World::spawnEntities(EntityManager* entityManager,
 }
 
 Vector2 World::getRandomWinPoint() {
-    float distance = 1000.0f;
+    float distance = 20000.0f;
     Vector2 point;
     Rectangle pointRect;
 
