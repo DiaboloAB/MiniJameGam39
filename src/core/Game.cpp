@@ -147,6 +147,9 @@ void Game::draw() {
     // BeginShaderMode(_heartBeatShader);
     // DrawRectangle(0, 0, _screenWidth, _screenHeight, BLACK);
     // EndShaderMode();
+    if (_drivingMode && _car) {
+        _hud->drawTimer(_drivingTimer);
+    }
     _hud->draw();
 }
 

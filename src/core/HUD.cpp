@@ -66,3 +66,24 @@ void HUD::draw() {
     Rectangle dest = { static_cast<float>(panicIconX + textOffsetX), static_cast<float>(hudY + (iconSize / 2) - (_panicBarTexture.height / 2)), static_cast<float>(frameWidth), static_cast<float>(_panicBarTexture.height) };
     DrawTexturePro(_panicBarTexture, source, dest, {0, 0}, 0.0f, WHITE);
 }
+
+void HUD::drawTimer(float deltaTime) {
+    int totalSeconds = static_cast<int>(deltaTime);
+    int milliseconds = static_cast<int>((deltaTime - totalSeconds) * 100);
+
+    std::string timeString = std::to_string(totalSeconds) + "." + 
+                             (milliseconds < 10 ? "0" : "") + std::to_string(milliseconds);
+
+    int fontSize = 20;
+    int textWidth = MeasureText(timeString.c_str(), fontSize);
+    int centerX = (1920 / 2) - (textWidth / 2);
+
+    int hudY = 20;
+
+    int frameWidth = _panicBarTexture.width / 16;
+    Rectangle source = { static_cast<float>(0 * frameWidth), 0, static_cast<float>(frameWidth), static_cast<float>(_panicBarTexture.height) };
+    Rectangle dest = { static_cast<float>((1920 / 2) - (40 / 2)), static_cast<float>(hudY + (32 / 2) - (_panicBarTexture.height / 2)), static_cast<float>(frameWidth), static_cast<float>(_panicBarTexture.height) };
+    DrawTexturePro(_panicBarTexture, source, dest, {0, 0}, 0.0f, WHITE);
+
+    DrawText(timeString.c_str(), centerX, hudY, fontSize, WHITE);
+}
