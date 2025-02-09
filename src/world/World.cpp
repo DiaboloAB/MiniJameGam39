@@ -6,6 +6,7 @@
 
 #include "World.hpp"
 #include "raylib.h"
+#include "raymath.h"
 
 // std
 #include <iostream>
@@ -33,11 +34,11 @@ World::~World() {
 Vector2 World::getChunkXY(Vector2 position) {
     Vector2 chunkXY = {0, 0};
 
-    position.x += 32 * 16 * 4 * 4;
-    position.y += 32 * 16 * 4 * 4;
+    position.x += 32 * 16 * 4 * 100;
+    position.y += 32 * 16 * 4 * 100;
 
-    chunkXY.x = (int)position.x / (32 * 16 * 4) - 4;
-    chunkXY.y = (int)position.y / (32 * 16 * 4) - 4;
+    chunkXY.x = (int)position.x / (32 * 16 * 4) - 100;
+    chunkXY.y = (int)position.y / (32 * 16 * 4) - 100;
 
     return chunkXY;
 }
@@ -85,4 +86,49 @@ Rectangle World::getCollisions(Rectangle player) {
         }
     }
     return {0, 0, 0, 0};
+}
+
+Vector2 World::getSpawn(Vector2 camTopLeft, Vector2 screenSize) {
+    int chunkSize = 32 * 16 * 4;
+
+    // get a spawn on a random chunk outside the screen
+    Vector2 startChunk = Vector2Subtract(getChunkXY(camTopLeft), {1, 1});
+    Vector2 endChunk =
+        Vector2Add(getChunkXY((Vector2){camTopLeft.x + screenSize.x,
+                                        camTopLeft.y + screenSize.y}),
+                   {1, 1});
+
+    // choose 1 chunk randomly on the border of the screen
+
+    int side = GetRandomValue(0, 3);
+
+    Vector2 spawnChunk = {0, 0};
+
+    switch (side) {
+        case 0:  // top
+            spawnChunk.x = GetRandomValue(startChunk.x, endChunk.x);
+            spawnChunk.y = startChunk.y;
+            break;
+        case 1:  // right
+            spawnChunk.x = endChunk.x;
+            spawnChunk.y = GetRandomValue(startChunk.y, endChunk.y);
+            break;
+        case 2:  // bottom
+            spawnChunk.x = GetRandomValue(startChunk.x, endChunk.x);
+            spawnChunk.y = endChunk.y;
+            break;
+        case 3:  // left
+            spawnChunk.x = startChunk.x;
+            spawnChunk.y = GetRandomValue(startChunk.y, endChunk.y);
+            break;
+    }
+
+    auto chunkCoords = std::make_pair(spawnChunk.x, spawnChunk.y);
+    if (_chunks.find(chunkCoords) == _chunks.end()) {
+        _chunks[chunkCoords] = 0;
+    }
+
+    Vector2 chunkPos = {spawnChunk.x * chunkSize, spawnChunk.y * chunkSize};
+
+    return Vector2Add(chunkPos, _tilemap->getSpawn());
 }

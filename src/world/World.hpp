@@ -43,6 +43,8 @@ public:
 
     Vector2 getChunkXY(Vector2 position);
 
+    Vector2 getSpawn(Vector2 camTopLeft, Vector2 screenSize);
+
 private:
     Image _tileset;
     Texture2D _tilesetTexture;

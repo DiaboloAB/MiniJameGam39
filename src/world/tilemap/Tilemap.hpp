@@ -17,9 +17,11 @@ class Tilemap {
 public:
     bool loadFromFile(const std::string& filename);
     void drawLayer(Texture2D tileset, Vector2 chunkPos, Vector2 camTopLeft,
-                    Vector2 screenSize, int layer);
+                   Vector2 screenSize, int layer);
     void loadMap(const char* name, const char* csvData);
     void drawWall(Vector2 position = {0, 0});
+
+    Vector2 getSpawn();
 
     Rectangle getCollisions(Rectangle player, Vector2 position = {0, 0});
 

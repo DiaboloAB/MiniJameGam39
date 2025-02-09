@@ -20,6 +20,8 @@ Game::Game(int screenWidth, int screenHeight)
     _world = std::make_unique<World>();
     _hud = std::make_unique<HUD>();
     _entityManager = std::make_unique<EntityManager>();
+    _gameManager = std::make_unique<GameManager>(
+        _world.get(), _entityManager.get(), _player.get());
     initCamera();
 
     // get a value on a circle of radius 1000
@@ -57,12 +59,14 @@ SceneType Game::update(float deltaTime) {
     _hud->update(deltaTime, _player->getPanic(), _player->getBonus());
     followPlayer();
 
-    _spawnTimer += deltaTime;
-    if (_spawnTimer > 3) {
-        _entityManager->spawnEntity(_player->getPosition());
-        _spawnTimer = 0;
-    }
+    // _spawnTimer += deltaTime;
+    // if (_spawnTimer > 3) {
+    //     _entityManager->spawnEntity(_player->getPosition());
+    //     _spawnTimer = 0;
+    // }
     _entityManager->update(deltaTime, _player.get(), _world.get());
+    _gameManager->update(deltaTime, _camera.target - _camera.offset,
+                         (Vector2){(float)_screenWidth, (float)_screenHeight});
     return SceneType::GAME;
 }
 
@@ -176,7 +180,8 @@ void Game::handlePlayerInput(float deltaTime, Vector2 direction, float speed) {
             _player->setPosition(newPosition);
         }
     }
-    if (_car && CheckCollisionRecs(_player->getBoundingBox(), _car->getBoundingBox())) {
+    if (_car &&
+        CheckCollisionRecs(_player->getBoundingBox(), _car->getBoundingBox())) {
         _drivingMode = true;
         _drivingTimer = 10.0f;
         _car->setPosition(_player->getPosition());
@@ -191,13 +196,13 @@ void Game::handleCarInput(float deltaTime) {
             _car->accelerate(600 * deltaTime);  // Accélère
         }
         if (IsKeyDown(KEY_DOWN)) {
-            _car->accelerate(-150 * deltaTime); // Freine
+            _car->accelerate(-150 * deltaTime);  // Freine
         }
         if (IsKeyDown(KEY_LEFT)) {
-            _car->turn(-120 * deltaTime); // Tourne à gauche
+            _car->turn(-120 * deltaTime);  // Tourne à gauche
         }
         if (IsKeyDown(KEY_RIGHT)) {
-            _car->turn(120 * deltaTime); // Tourne à droite
+            _car->turn(120 * deltaTime);  // Tourne à droite
         }
         Vector2 prevPosition = _car->getPosition();
         _car->update(deltaTime);

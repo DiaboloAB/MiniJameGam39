@@ -8,11 +8,11 @@
 #define GAME_H
 
 #include "HUD.hpp"
+#include "core/GameManager.hpp"
 #include "groupies/EntityManager.hpp"
+#include "player/Car.hpp"
 #include "player/Player.hpp"
 #include "world/World.hpp"
-#include "player/Car.hpp"
-#include "HUD.hpp"
 
 // std
 #include <chrono>
@@ -48,9 +48,10 @@ private:
     std::unique_ptr<Car> _car;
 
     std::unique_ptr<World> _world;
+    std::unique_ptr<GameManager> _gameManager;
+    std::unique_ptr<EntityManager> _entityManager;
 
     std::unique_ptr<HUD> _hud;
-    std::unique_ptr<EntityManager> _entityManager;
     Texture2D _arrow;
     Texture2D _drop;
 

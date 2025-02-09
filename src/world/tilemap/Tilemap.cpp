@@ -190,3 +190,20 @@ Rectangle Tilemap::getCollisions(Rectangle player, Vector2 position) {
     }
     return {0, 0, 0, 0};
 }
+
+Vector2 Tilemap::getSpawn() {
+    int random = GetRandomValue(0, wallLayer.size());
+
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            int tileIndex = spawnLayer[y * width + x];
+            if (tileIndex > 0) {
+                random--;
+                if (random == 0) {
+                    return {x * tileWidth * 4, y * tileHeight * 4};
+                }
+            }
+        }
+    }
+    return {0, 0};
+}
