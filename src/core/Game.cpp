@@ -64,6 +64,11 @@ SceneType Game::update(float deltaTime) {
     _entityManager->update(deltaTime, _player.get(), _world.get());
     _gameManager->update(deltaTime, _camera.target - _camera.offset,
                          (Vector2){(float)_screenWidth, (float)_screenHeight});
+
+    if (_drivingMode) {
+        resetGame();
+        return SceneType::GAME_OVER;
+    }
     return SceneType::GAME;
 }
 
@@ -201,16 +206,16 @@ void Game::handleCarInput(float deltaTime) {
 
     if (_car) {
         if (IsKeyDown(KEY_UP)) {
-            _car->accelerate(600 * deltaTime);  // Accélère
+            _car->accelerate(600 * deltaTime);
         }
         if (IsKeyDown(KEY_DOWN)) {
-            _car->accelerate(-150 * deltaTime);  // Freine
+            _car->accelerate(-150 * deltaTime);
         }
         if (IsKeyDown(KEY_LEFT)) {
-            _car->turn(-120 * deltaTime);  // Tourne à gauche
+            _car->turn(-120 * deltaTime);
         }
         if (IsKeyDown(KEY_RIGHT)) {
-            _car->turn(120 * deltaTime);  // Tourne à droite
+            _car->turn(120 * deltaTime);
         }
         Vector2 prevPosition = _car->getPosition();
         _car->update(deltaTime);
@@ -267,4 +272,12 @@ void Game::drawDrop() {
                    (Rectangle){0, 0, (float)_drop.width, (float)_drop.height},
                    (Rectangle){_winPosition.x, _winPosition.y, 100, 100},
                    (Vector2){50, 50}, 0, WHITE);
+}
+
+void Game::resetGame() {
+    _player->setPosition({0, 0});
+    _drivingMode = false;
+    _drivingTimer = 0.0f;
+    _car.reset();
+    _hud->reset();
 }

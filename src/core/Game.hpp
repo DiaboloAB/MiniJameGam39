@@ -34,6 +34,7 @@ public:
 
     void handlePlayerInput(float deltaTime, Vector2 direction, float speed);
     void handleCarInput(float deltaTime);
+    void resetGame();
 
 private:
     float _deltaTime;

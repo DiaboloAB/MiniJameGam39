@@ -7,6 +7,6 @@
 #ifndef SCENETYPE_H
 #define SCENETYPE_H
 
-enum class SceneType { MENU, GAME, EXIT };
+enum class SceneType { MENU, GAME, EXIT, GAME_OVER };
 
 #endif  // SCENETYPE_H

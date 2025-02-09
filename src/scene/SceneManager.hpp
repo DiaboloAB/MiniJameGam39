@@ -7,6 +7,7 @@
 #include "../core/Game.hpp"
 #include "SceneType.hpp"
 #include "menu/Menu.hpp"
+#include "gameover/GameOver.hpp"
 #include "raylib.h"
 
 class SceneManager {
@@ -27,6 +28,7 @@ private:
 
     std::unique_ptr<Menu> _menu;
     std::unique_ptr<Game> _game;
+    std::unique_ptr<GameOver> _gameOver;
 
     float _deltaTime;
     std::chrono::high_resolution_clock::time_point _lastTime;
