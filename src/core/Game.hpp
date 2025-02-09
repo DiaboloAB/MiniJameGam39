@@ -64,6 +64,7 @@ private:
     Shader _heartBeatShader;
     int _resolutionLoc;
     int _timeLoc;
+    int _healthLoc;
 };
 
 #endif  // GAME_H

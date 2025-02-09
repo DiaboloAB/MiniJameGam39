@@ -33,9 +33,10 @@ Game::Game(int screenWidth, int screenHeight)
     Image drop = LoadImage("assets/drop.png");
     _drop = LoadTextureFromImage(drop);
 
-    _heartBeatShader = LoadShader(0, "assets/shaders/speed_effect.fs");
+    _heartBeatShader = LoadShader(0, "assets/shaders/heart_beat.fs");
     _resolutionLoc = GetShaderLocation(_heartBeatShader, "resolution");
     _timeLoc = GetShaderLocation(_heartBeatShader, "time");
+    _healthLoc = GetShaderLocation(_heartBeatShader, "health");
 }
 
 Game::~Game() {
@@ -43,7 +44,7 @@ Game::~Game() {
 
 SceneType Game::update(float deltaTime) {
     Vector2 direction = {0, 0};
-    float speed = 500 * deltaTime;
+    float speed = _player->getSpeed() * deltaTime;
 
     direction.x = IsKeyDown(KEY_RIGHT) - IsKeyDown(KEY_LEFT);
     direction.y = IsKeyDown(KEY_DOWN) - IsKeyDown(KEY_UP);
@@ -59,11 +60,6 @@ SceneType Game::update(float deltaTime) {
     _hud->update(deltaTime, _player->getPanic(), _player->getBonus());
     followPlayer();
 
-    // _spawnTimer += deltaTime;
-    // if (_spawnTimer > 3) {
-    //     _entityManager->spawnEntity(_player->getPosition());
-    //     _spawnTimer = 0;
-    // }
     _player->setIsDriving(_drivingMode);
     _entityManager->update(deltaTime, _player.get(), _world.get());
     _gameManager->update(deltaTime, _camera.target - _camera.offset,
@@ -115,12 +111,6 @@ void drawCameraTarget(Camera2D camera) {
 void Game::draw() {
     BeginMode2D(_camera);
 
-    float resolution[2] = {(float)_screenWidth, (float)_screenHeight};
-    SetShaderValue(_heartBeatShader, _resolutionLoc, resolution,
-                   SHADER_UNIFORM_VEC2);
-    float time = GetTime();
-    SetShaderValue(_heartBeatShader, _timeLoc, &time, SHADER_UNIFORM_FLOAT);
-
     drawGrid(_screenWidth, _screenHeight, _camera);
     _world->drawChunks(_camera.target - _camera.offset,
                        (Vector2){(float)_screenWidth, (float)_screenHeight});
@@ -149,6 +139,20 @@ void Game::draw() {
     // EndShaderMode();
     if (_drivingMode && _car) {
         _hud->drawTimer(_drivingTimer);
+    }
+    if (_player->_panic > 3) {
+        float resolution[2] = {(float)_screenWidth, (float)_screenHeight};
+        SetShaderValue(_heartBeatShader, _resolutionLoc, resolution,
+                       SHADER_UNIFORM_VEC2);
+        float time = GetTime();
+        SetShaderValue(_heartBeatShader, _timeLoc, &time, SHADER_UNIFORM_FLOAT);
+        float health = (16 - _player->_panic) / 16;
+        SetShaderValue(_heartBeatShader, _healthLoc, &health,
+                       SHADER_UNIFORM_FLOAT);
+
+        BeginShaderMode(_heartBeatShader);
+        DrawRectangle(0, 0, _screenWidth, _screenHeight, BLACK);
+        EndShaderMode();
     }
     _hud->draw();
 }

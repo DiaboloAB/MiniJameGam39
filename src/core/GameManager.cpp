@@ -20,7 +20,11 @@ void GameManager::update(float deltaTime, Vector2 camTopLeft,
                          Vector2 screenSize) {
     _spawnTimer += deltaTime;
     if (_spawnTimer > 0.5) {
-        _entityManager->spawnEntity(_world->getSpawn(camTopLeft, screenSize));
+        for (int i = 0; i < 4; i++) {
+            std::cout << "test" << std::endl;
+            _entityManager->spawnEntity(
+                _world->getSpawn(camTopLeft, screenSize));
+        }
 
         _spawnTimer = 0;
     }

@@ -2,6 +2,7 @@
 
 uniform float time;
 uniform vec2 resolution;
+uniform float health;
 
 out vec4 fragColor;
 
@@ -14,7 +15,7 @@ void main() {
     float beat = sin(time * 10.0) * 0.5 + 0.5;
 
     // Intensity based on health
-    float intensity = (1.0 - 0.8) * beat;
+    float intensity = (1.0 - health) * beat;
 
     // Red overlay effect with transparency
     vec3 redColor = vec3(1.0, 0.0, 0.0);

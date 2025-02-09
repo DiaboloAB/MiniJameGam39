@@ -36,11 +36,21 @@ public:
 
     void draw();
 
+    bool _satisfied = false;
+
+    void setEmoji(int nb);
+
 private:
     Vector2 _position;
     Animation* _animation;
-    int _direction;  // 0: Left, 1: Down, 2: Up, 3: Right
-    bool _isMoving;
+    int _direction = 0;  // 0: Left, 1: Down, 2: Up, 3: Right
+    bool _isMoving = false;
+
+    bool _following = false;
+
+    Texture2D _emojis;
+    int _state = 0;
+    float _emojiTime = 0;
 };
 
 #endif  // ENTITY_H

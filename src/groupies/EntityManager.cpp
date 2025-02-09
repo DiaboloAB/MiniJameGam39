@@ -19,6 +19,7 @@ void EntityManager::killEntity(int id) {
 }
 
 int EntityManager::spawnEntity(Vector2 position) {
+    std::cout << "spawn entity:" << _nextId << std::endl;
     _entities[_nextId] = std::make_unique<Entity>();
     _entities[_nextId]->setPosition(position);
     return _nextId++;
@@ -59,8 +60,10 @@ void EntityManager::handleCollision(Entity* entity1, Entity* entity2) {
 
 void EntityManager::update(float deltaTime, Player* player, World* world) {
     for (auto& entity : _entities) {
-        if (entity.second->update(deltaTime, player, world))
+        if (entity.second->update(deltaTime, player, world)) {
+            std::cout << "kill entity: " << entity.first << std::endl;
             killEntity(entity.first);
+        }
     }
 
     while (!_killQueue.empty()) {
@@ -69,6 +72,8 @@ void EntityManager::update(float deltaTime, Player* player, World* world) {
         _killQueue.pop();
     }
     for (auto it1 = _entities.begin(); it1 != _entities.end(); ++it1) {
+        if (it1->second.get()->_satisfied)
+            continue;
         for (auto it2 = std::next(it1); it2 != _entities.end(); ++it2) {
             handleCollision(it1->second.get(), it2->second.get());
         }

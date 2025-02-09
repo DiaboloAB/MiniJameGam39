@@ -46,14 +46,23 @@ public:
         _isDriving = isDriving;
     }
 
+    float getSpeed() {
+        return _speed;
+    }
+
+    void setSpeed(float speed) {
+        _speed = speed;
+    }
+
+    float _panic;  // 16 levels of panic
 private:
     Vector2 _position;
     Animation* _animation;
     int _direction;  // 0: Left, 1: Down, 2: Up, 3: Right
     bool _isMoving;
-    int _panic;  // 16 levels of panic
     int _bonus;
     bool _isDriving = false;
+    float _speed = 400;
 };
 
 #endif  // PLAYER_H
