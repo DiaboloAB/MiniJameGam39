@@ -83,3 +83,9 @@ void HUD::drawTimer(float deltaTime) {
 
     DrawText(timeString.c_str(), centerTextX, hudY, fontSize, WHITE);
 }
+
+void HUD::reset() {
+    _elapsedTime = 0.0f;
+    _panicCount = 0;
+    _bonusCount = 0;
+}

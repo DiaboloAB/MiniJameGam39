@@ -70,6 +70,7 @@ SceneType Game::update(float deltaTime) {
                          (Vector2){(float)_screenWidth, (float)_screenHeight});
 
     if (_drivingMode) {
+        resetGame();
         return SceneType::GAME_OVER;
     }
     return SceneType::GAME;
@@ -267,4 +268,12 @@ void Game::drawDrop() {
                    (Rectangle){0, 0, (float)_drop.width, (float)_drop.height},
                    (Rectangle){_winPosition.x, _winPosition.y, 100, 100},
                    (Vector2){50, 50}, 0, WHITE);
+}
+
+void Game::resetGame() {
+    _player->setPosition({0, 0});
+    _drivingMode = false;
+    _drivingTimer = 0.0f;
+    _car.reset();
+    _hud->reset();
 }
