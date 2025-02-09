@@ -9,6 +9,7 @@
 
 #include "../menu/button/button.hpp"
 #include "scene/SceneType.hpp"
+#include "core/GameStats.hpp"
 
 class Victory {
 public:
@@ -31,6 +32,10 @@ private:
 
     int _screenWidth;
     int _screenHeight;
+
+    Texture2D _panel;
+    Texture2D _timeTexture;
+    Texture2D _bonusTexture;
 };
 
 #endif /* !VICTORY_HPP_ */

@@ -62,7 +62,9 @@ SceneType Game::update(float deltaTime) {
         handleCarInput(deltaTime);
     }
 
-    _hud->update(deltaTime, _player->getPanic(), _player->getBonus());
+    if (!_playerSaved) {
+        _hud->update(deltaTime, _player->getPanic(), _player->getBonus());
+    }
     followPlayer();
 
     _player->setIsDriving(_drivingMode);
@@ -86,7 +88,9 @@ SceneType Game::update(float deltaTime) {
 
         if (_playerSaved && _planePosition.x > _screenWidth) {
             _planeMoving = false;
-            resetGame();
+            GameStats::finalTime = _hud->getElapsedTime();
+            GameStats::finalBonus = _player->getBonus();
+            // resetGame();
             return SceneType::VICTORY;
         }
     }
