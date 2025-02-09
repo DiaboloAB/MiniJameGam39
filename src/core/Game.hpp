@@ -13,6 +13,7 @@
 #include "player/Car.hpp"
 #include "player/Player.hpp"
 #include "world/World.hpp"
+#include "core/GameStats.hpp"
 
 // std
 #include <chrono>

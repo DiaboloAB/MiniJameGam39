@@ -21,6 +21,7 @@ public:
     void draw();
     void drawTimer(float deltaTime);
     void reset();
+    float getElapsedTime() { return _elapsedTime; }
 
 private:
     Animation* _panicBarAnimation;
